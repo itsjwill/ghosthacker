@@ -19,6 +19,9 @@
 import { createSdkMcpServer } from '@anthropic-ai/claude-agent-sdk';
 import { createSaveDeliverableTool } from './tools/save-deliverable.js';
 import { generateTotpTool } from './tools/generate-totp.js';
+import { createRecordTechniqueTool, createQueryIntelligenceTool } from './tools/intelligence-tools.js';
+import { createEvolvePayloadTool, createTestPayloadTool } from './tools/payload-tools.js';
+import { createOracleProbeTool } from './tools/oracle-tools.js';
 
 /**
  * Create Ghost Hacker MCP Server with target directory context
@@ -34,7 +37,18 @@ export function createGhostHackerServer(targetDir: string): ReturnType<typeof cr
   return createSdkMcpServer({
     name: 'ghosthacker-helper',
     version: '1.0.0',
-    tools: [saveDeliverableTool, generateTotpTool],
+    tools: [
+      saveDeliverableTool,
+      generateTotpTool,
+      // Intelligence tools (cross-scan learning)
+      createRecordTechniqueTool(),
+      createQueryIntelligenceTool(),
+      // Payload evolution tools (WAF bypass)
+      createEvolvePayloadTool(),
+      createTestPayloadTool(),
+      // Oracle tools (blind injection)
+      createOracleProbeTool(),
+    ],
   });
 }
 

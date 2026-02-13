@@ -8,7 +8,7 @@ import { fs, path } from 'zx';
 import { PentestError } from './error-handling.js';
 import { asyncPipe } from './utils/functional.js';
 
-export type VulnType = 'injection' | 'xss' | 'auth' | 'ssrf' | 'authz';
+export type VulnType = 'injection' | 'xss' | 'auth' | 'ssrf' | 'authz' | 'secrets' | 'variants';
 
 interface VulnTypeConfigItem {
   deliverable: string;
@@ -94,6 +94,14 @@ const VULN_TYPE_CONFIG: VulnTypeConfig = Object.freeze({
   authz: Object.freeze({
     deliverable: 'authz_analysis_deliverable.md',
     queue: 'authz_exploitation_queue.json',
+  }),
+  secrets: Object.freeze({
+    deliverable: 'secrets_analysis_deliverable.md',
+    queue: 'secrets_exploitation_queue.json',
+  }),
+  variants: Object.freeze({
+    deliverable: 'variants_analysis_deliverable.md',
+    queue: 'variants_exploitation_queue.json',
   }),
 }) as VulnTypeConfig;
 

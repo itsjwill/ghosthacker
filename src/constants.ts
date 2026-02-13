@@ -41,19 +41,22 @@ export const MCP_AGENT_MAPPING: Record<PromptName, PlaywrightAgent> = Object.fre
   // Phase 2: Reconnaissance (actual prompt name is 'recon')
   recon: 'playwright-agent2',
 
-  // Phase 3: Vulnerability Analysis (5 parallel agents)
+  // Phase 3: Vulnerability Analysis (7 parallel agents)
   'vuln-injection': 'playwright-agent1',
   'vuln-xss': 'playwright-agent2',
   'vuln-auth': 'playwright-agent3',
   'vuln-ssrf': 'playwright-agent4',
   'vuln-authz': 'playwright-agent5',
+  'vuln-secrets': 'playwright-agent1', // Code analysis - no browser needed
+  'vuln-variants': 'playwright-agent2', // Code analysis - no browser needed
 
-  // Phase 4: Exploitation (5 parallel agents - same as vuln counterparts)
+  // Phase 4: Exploitation (6 parallel agents - same as vuln counterparts)
   'exploit-injection': 'playwright-agent1',
   'exploit-xss': 'playwright-agent2',
   'exploit-auth': 'playwright-agent3',
   'exploit-ssrf': 'playwright-agent4',
   'exploit-authz': 'playwright-agent5',
+  'exploit-blind-injection': 'playwright-agent3', // Blind injection oracle
 
   // Phase 5: Reporting (actual prompt name is 'report-executive')
   // NOTE: Report generation is typically text-based and doesn't use browser automation,
@@ -81,6 +84,8 @@ export const AGENT_VALIDATORS: Record<AgentName, AgentValidator> = Object.freeze
   'auth-vuln': createVulnValidator('auth'),
   'ssrf-vuln': createVulnValidator('ssrf'),
   'authz-vuln': createVulnValidator('authz'),
+  'secrets-vuln': createVulnValidator('secrets'),
+  'variant-hunter': createVulnValidator('variants'),
 
   // Exploitation agents
   'injection-exploit': createExploitValidator('injection'),
@@ -88,6 +93,10 @@ export const AGENT_VALIDATORS: Record<AgentName, AgentValidator> = Object.freeze
   'auth-exploit': createExploitValidator('auth'),
   'ssrf-exploit': createExploitValidator('ssrf'),
   'authz-exploit': createExploitValidator('authz'),
+  'blind-injection-exploit': async (sourceDir: string): Promise<boolean> => {
+    const evidenceFile = path.join(sourceDir, 'deliverables', 'blind_injection_exploitation_evidence.md');
+    return await fs.pathExists(evidenceFile);
+  },
 
   // Executive report agent
   report: async (sourceDir: string): Promise<boolean> => {

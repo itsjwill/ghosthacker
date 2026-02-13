@@ -354,6 +354,18 @@ export async function runAuthzExploitAgent(input: ActivityInput): Promise<AgentM
   return runAgentActivity('authz-exploit', input);
 }
 
+export async function runSecretsVulnAgent(input: ActivityInput): Promise<AgentMetrics> {
+  return runAgentActivity('secrets-vuln', input);
+}
+
+export async function runVariantHunterAgent(input: ActivityInput): Promise<AgentMetrics> {
+  return runAgentActivity('variant-hunter', input);
+}
+
+export async function runBlindInjectionExploitAgent(input: ActivityInput): Promise<AgentMetrics> {
+  return runAgentActivity('blind-injection-exploit', input);
+}
+
 export async function runReportAgent(input: ActivityInput): Promise<AgentMetrics> {
   return runAgentActivity('report', input);
 }

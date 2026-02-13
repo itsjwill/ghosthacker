@@ -16,11 +16,14 @@ export type AgentName =
   | 'auth-vuln'
   | 'ssrf-vuln'
   | 'authz-vuln'
+  | 'secrets-vuln'
+  | 'variant-hunter'
   | 'injection-exploit'
   | 'xss-exploit'
   | 'auth-exploit'
   | 'ssrf-exploit'
   | 'authz-exploit'
+  | 'blind-injection-exploit'
   | 'report';
 
 export type PromptName =
@@ -31,11 +34,14 @@ export type PromptName =
   | 'vuln-auth'
   | 'vuln-ssrf'
   | 'vuln-authz'
+  | 'vuln-secrets'
+  | 'vuln-variants'
   | 'exploit-injection'
   | 'exploit-xss'
   | 'exploit-auth'
   | 'exploit-ssrf'
   | 'exploit-authz'
+  | 'exploit-blind-injection'
   | 'report-executive';
 
 export type PlaywrightAgent =
@@ -72,11 +78,14 @@ export function getPromptNameForAgent(agentName: AgentName): PromptName {
     'auth-vuln': 'vuln-auth',
     'ssrf-vuln': 'vuln-ssrf',
     'authz-vuln': 'vuln-authz',
+    'secrets-vuln': 'vuln-secrets',
+    'variant-hunter': 'vuln-variants',
     'injection-exploit': 'exploit-injection',
     'xss-exploit': 'exploit-xss',
     'auth-exploit': 'exploit-auth',
     'ssrf-exploit': 'exploit-ssrf',
     'authz-exploit': 'exploit-authz',
+    'blind-injection-exploit': 'exploit-blind-injection',
     'report': 'report-executive',
   };
 

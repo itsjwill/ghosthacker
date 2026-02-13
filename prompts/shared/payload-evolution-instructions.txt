@@ -1,0 +1,32 @@
+## Payload Evolution Strategy
+
+When a payload gets BLOCKED or FILTERED by the target application:
+
+1. **Do NOT give up.** Call `evolve_payload` with:
+   - The blocked payload
+   - The vulnerability type (injection, xss, ssrf)
+   - How it was blocked (WAF 403, input filtered, CSP, etc.)
+   - Target context (framework, WAF if known)
+
+2. **Test each variant** returned by `evolve_payload`:
+   - Try variants one at a time
+   - Call `test_payload` to record each result
+   - If a variant succeeds, call `record_technique` to save it for future scans
+
+3. **Decision tree:**
+   ```
+   Original payload
+     → Blocked? → evolve_payload(payload, reason)
+       → Variant 1 → test → blocked? → try Variant 2
+       → Variant 2 → test → executed! → record_technique(success)
+       → All blocked? → evolve_payload(best_variant, new_reason)
+         → Second generation variants...
+   ```
+
+4. **Maximum evolution depth:** 3 generations. If after 3 rounds of evolution
+   (original → evolved → evolved again) all variants are still blocked,
+   document the defense as robust and move to the next vulnerability.
+
+5. **Always record:** Whether the payload succeeded or failed, use
+   `record_technique` to log what you tried. This builds the intelligence
+   database for future scans.

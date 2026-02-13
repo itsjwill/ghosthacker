@@ -195,7 +195,7 @@ export async function pentestPipelineWorkflow(
       };
     }
 
-    // Run all 5 pipelines in parallel with graceful failure handling
+    // Run all 5 vuln→exploit pipelines in parallel with graceful failure handling
     // Promise.allSettled ensures other pipelines continue if one fails
     const pipelineResults = await Promise.allSettled([
       runVulnExploitPipeline(
@@ -244,6 +244,31 @@ export async function pentestPipelineWorkflow(
         }
       } else {
         // Pipeline failed - log error but continue with others
+        const errorMsg =
+          result.reason instanceof Error
+            ? result.reason.message
+            : String(result.reason);
+        failedPipelines.push(errorMsg);
+      }
+    }
+
+    // Run additional breakthrough agents in parallel:
+    // - Secrets scanner: source code analysis for hardcoded credentials
+    // - Variant hunter: CVE pattern matching for undiscovered variants
+    // - Blind injection exploit: constraint-solver for blind SQLi extraction
+    const additionalResults = await Promise.allSettled([
+      a.runSecretsVulnAgent(activityInput),
+      a.runVariantHunterAgent(activityInput),
+      a.runBlindInjectionExploitAgent(activityInput),
+    ]);
+
+    const additionalAgentNames: string[] = ['secrets-vuln', 'variant-hunter', 'blind-injection-exploit'];
+    for (const [i, result] of additionalResults.entries()) {
+      const agentName = additionalAgentNames[i] as string;
+      if (result.status === 'fulfilled') {
+        state.agentMetrics[agentName] = result.value;
+        state.completedAgents.push(agentName);
+      } else {
         const errorMsg =
           result.reason instanceof Error
             ? result.reason.message

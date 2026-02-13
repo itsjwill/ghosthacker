@@ -51,6 +51,16 @@ export const AGENTS: Readonly<Record<AgentName, AgentDefinition>> = Object.freez
     displayName: 'Authz vuln agent',
     prerequisites: ['recon']
   },
+  'secrets-vuln': {
+    name: 'secrets-vuln',
+    displayName: 'Secrets vuln agent',
+    prerequisites: ['recon']
+  },
+  'variant-hunter': {
+    name: 'variant-hunter',
+    displayName: 'Variant hunter agent',
+    prerequisites: ['recon']
+  },
   'injection-exploit': {
     name: 'injection-exploit',
     displayName: 'Injection exploit agent',
@@ -76,6 +86,11 @@ export const AGENTS: Readonly<Record<AgentName, AgentDefinition>> = Object.freez
     displayName: 'Authz exploit agent',
     prerequisites: ['authz-vuln']
   },
+  'blind-injection-exploit': {
+    name: 'blind-injection-exploit',
+    displayName: 'Blind injection exploit agent',
+    prerequisites: ['injection-vuln']
+  },
   'report': {
     name: 'report',
     displayName: 'Report agent',
@@ -92,18 +107,21 @@ export const AGENT_ORDER: readonly AgentName[] = Object.freeze([
   'auth-vuln',
   'ssrf-vuln',
   'authz-vuln',
+  'secrets-vuln',
+  'variant-hunter',
   'injection-exploit',
   'xss-exploit',
   'auth-exploit',
   'ssrf-exploit',
   'authz-exploit',
+  'blind-injection-exploit',
   'report'
 ] as const);
 
 // Parallel execution groups
 export const getParallelGroups = (): Readonly<{ vuln: AgentName[]; exploit: AgentName[] }> => Object.freeze({
-  vuln: ['injection-vuln', 'xss-vuln', 'auth-vuln', 'ssrf-vuln', 'authz-vuln'],
-  exploit: ['injection-exploit', 'xss-exploit', 'auth-exploit', 'ssrf-exploit', 'authz-exploit']
+  vuln: ['injection-vuln', 'xss-vuln', 'auth-vuln', 'ssrf-vuln', 'authz-vuln', 'secrets-vuln', 'variant-hunter'],
+  exploit: ['injection-exploit', 'xss-exploit', 'auth-exploit', 'ssrf-exploit', 'authz-exploit', 'blind-injection-exploit']
 });
 
 // Phase names for metrics aggregation
@@ -118,11 +136,14 @@ export const AGENT_PHASE_MAP: Readonly<Record<AgentName, PhaseName>> = Object.fr
   'auth-vuln': 'vulnerability-analysis',
   'authz-vuln': 'vulnerability-analysis',
   'ssrf-vuln': 'vulnerability-analysis',
+  'secrets-vuln': 'vulnerability-analysis',
+  'variant-hunter': 'vulnerability-analysis',
   'injection-exploit': 'exploitation',
   'xss-exploit': 'exploitation',
   'auth-exploit': 'exploitation',
   'authz-exploit': 'exploitation',
   'ssrf-exploit': 'exploitation',
+  'blind-injection-exploit': 'exploitation',
   'report': 'reporting',
 });
 

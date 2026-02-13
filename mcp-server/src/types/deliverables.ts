@@ -34,12 +34,19 @@ export enum DeliverableType {
   SSRF_ANALYSIS = 'SSRF_ANALYSIS',
   SSRF_QUEUE = 'SSRF_QUEUE',
 
+  // Secrets & Variant analysis agents
+  SECRETS_ANALYSIS = 'SECRETS_ANALYSIS',
+  SECRETS_QUEUE = 'SECRETS_QUEUE',
+  VARIANTS_ANALYSIS = 'VARIANTS_ANALYSIS',
+  VARIANTS_QUEUE = 'VARIANTS_QUEUE',
+
   // Exploitation agents
   INJECTION_EVIDENCE = 'INJECTION_EVIDENCE',
   XSS_EVIDENCE = 'XSS_EVIDENCE',
   AUTH_EVIDENCE = 'AUTH_EVIDENCE',
   AUTHZ_EVIDENCE = 'AUTHZ_EVIDENCE',
   SSRF_EVIDENCE = 'SSRF_EVIDENCE',
+  BLIND_INJECTION_EVIDENCE = 'BLIND_INJECTION_EVIDENCE',
 }
 
 /**
@@ -59,11 +66,16 @@ export const DELIVERABLE_FILENAMES: Record<DeliverableType, string> = {
   [DeliverableType.AUTHZ_QUEUE]: 'authz_exploitation_queue.json',
   [DeliverableType.SSRF_ANALYSIS]: 'ssrf_analysis_deliverable.md',
   [DeliverableType.SSRF_QUEUE]: 'ssrf_exploitation_queue.json',
+  [DeliverableType.SECRETS_ANALYSIS]: 'secrets_analysis_deliverable.md',
+  [DeliverableType.SECRETS_QUEUE]: 'secrets_exploitation_queue.json',
+  [DeliverableType.VARIANTS_ANALYSIS]: 'variants_analysis_deliverable.md',
+  [DeliverableType.VARIANTS_QUEUE]: 'variants_exploitation_queue.json',
   [DeliverableType.INJECTION_EVIDENCE]: 'injection_exploitation_evidence.md',
   [DeliverableType.XSS_EVIDENCE]: 'xss_exploitation_evidence.md',
   [DeliverableType.AUTH_EVIDENCE]: 'auth_exploitation_evidence.md',
   [DeliverableType.AUTHZ_EVIDENCE]: 'authz_exploitation_evidence.md',
   [DeliverableType.SSRF_EVIDENCE]: 'ssrf_exploitation_evidence.md',
+  [DeliverableType.BLIND_INJECTION_EVIDENCE]: 'blind_injection_exploitation_evidence.md',
 };
 
 /**
@@ -75,6 +87,8 @@ export const QUEUE_TYPES: DeliverableType[] = [
   DeliverableType.AUTH_QUEUE,
   DeliverableType.AUTHZ_QUEUE,
   DeliverableType.SSRF_QUEUE,
+  DeliverableType.SECRETS_QUEUE,
+  DeliverableType.VARIANTS_QUEUE,
 ];
 
 /**
