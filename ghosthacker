@@ -2,7 +2,7 @@
 
 # ============================================================================
 # GHOST HACKER - Adversarial AI Pentester
-# Enhanced Shannon with CHAOS vs ORDER dual-agent exploitation
+# Adversarial AI Pentester - CHAOS vs ORDER dual-agent exploitation
 # ============================================================================
 
 set -e
@@ -119,11 +119,11 @@ cmd_start() {
     # Determine mode
     if [[ "$CLASSIC" == "true" ]]; then
         echo -e "${YELLOW}Mode: Classic (single-agent)${NC}"
-        TASK_QUEUE="shannon-pentest"
+        TASK_QUEUE="ghosthacker-pentest"
         WORKFLOW="pentestPipelineWorkflow"
     else
         echo -e "${MAGENTA}Mode: ADVERSARIAL (CHAOS vs ORDER)${NC}"
-        TASK_QUEUE="shannon-enhanced"
+        TASK_QUEUE="ghosthacker-enhanced"
         WORKFLOW="enhancedPentestWorkflow"
     fi
 

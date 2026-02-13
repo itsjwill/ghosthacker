@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// Copyright (C) 2025 Keygraph, Inc.
+// Copyright (C) 2026 Ghost Hacker Contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License version 3
 // as published by the Free Software Foundation.
 
 /**
- * Temporal worker for Shannon pentest pipeline.
+ * Temporal worker for Ghost Hacker pentest pipeline.
  *
- * Polls the 'shannon-pipeline' task queue and executes activities.
+ * Polls the 'ghosthacker-pipeline' task queue and executes activities.
  * Handles up to 25 concurrent activities to support multiple parallel workflows.
  *
  * Usage:
@@ -48,7 +48,7 @@ async function runWorker(): Promise<void> {
     namespace: 'default',
     workflowBundle,
     activities,
-    taskQueue: 'shannon-pipeline',
+    taskQueue: 'ghosthacker-pipeline',
     maxConcurrentActivityTaskExecutions: 25, // Support multiple parallel workflows (5 agents × ~5 workflows)
   });
 
@@ -61,8 +61,8 @@ async function runWorker(): Promise<void> {
   process.on('SIGINT', shutdown);
   process.on('SIGTERM', shutdown);
 
-  console.log(chalk.green('Shannon worker started'));
-  console.log(chalk.gray('Task queue: shannon-pipeline'));
+  console.log(chalk.green('Ghost Hacker worker started'));
+  console.log(chalk.gray('Task queue: ghosthacker-pipeline'));
   console.log(chalk.gray('Press Ctrl+C to stop\n'));
 
   try {

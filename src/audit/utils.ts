@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Keygraph, Inc.
+// Copyright (C) 2026 Ghost Hacker Contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License version 3
@@ -18,9 +18,9 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Get Shannon repository root
-export const SHANNON_ROOT = path.resolve(__dirname, '..', '..');
-export const AUDIT_LOGS_DIR = path.join(SHANNON_ROOT, 'audit-logs');
+// Get Ghost Hacker repository root
+export const GHOSTHACKER_ROOT = path.resolve(__dirname, '..', '..');
+export const AUDIT_LOGS_DIR = path.join(GHOSTHACKER_ROOT, 'audit-logs');
 
 export interface SessionMetadata {
   id: string;

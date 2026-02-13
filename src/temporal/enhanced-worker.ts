@@ -14,7 +14,7 @@ async function run() {
   const worker = await Worker.create({
     connection,
     namespace: 'default',
-    taskQueue: 'shannon-enhanced',
+    taskQueue: 'ghosthacker-enhanced',
     workflowsPath: new URL('./enhanced-workflow.js', import.meta.url).pathname,
     activities: {
       // Standard activities
@@ -27,7 +27,7 @@ async function run() {
   });
 
   console.log('🔥 Enhanced Worker started - CHAOS vs ORDER ready');
-  console.log('   Task Queue: shannon-enhanced');
+  console.log('   Task Queue: ghosthacker-enhanced');
 
   await worker.run();
 }

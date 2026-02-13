@@ -1,5 +1,5 @@
 /**
- * Enhanced Shannon Workflow
+ * Enhanced Ghost Hacker Workflow
  *
  * Integrates three innovations:
  * 1. Difficulty Router - Route vulns to optimal strategies before exploitation

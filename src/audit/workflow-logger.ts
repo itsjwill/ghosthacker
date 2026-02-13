@@ -1,4 +1,4 @@
-// Copyright (C) 2025 Keygraph, Inc.
+// Copyright (C) 2026 Ghost Hacker Contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License version 3
@@ -85,7 +85,7 @@ export class WorkflowLogger {
   private async writeHeader(): Promise<void> {
     const header = [
       `================================================================================`,
-      `Shannon Pentest - Workflow Log`,
+      `Ghost Hacker Pentest - Workflow Log`,
       `================================================================================`,
       `Workflow ID: ${this.sessionMetadata.id}`,
       `Target URL:  ${this.sessionMetadata.webUrl}`,

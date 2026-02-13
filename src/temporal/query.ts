@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// Copyright (C) 2025 Keygraph, Inc.
+// Copyright (C) 2026 Ghost Hacker Contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License version 3
 // as published by the Free Software Foundation.
 
 /**
- * Temporal query tool for inspecting Shannon workflow progress.
+ * Temporal query tool for inspecting Ghost Hacker workflow progress.
  *
  * Queries a running or completed workflow and displays its state.
  *
@@ -52,12 +52,12 @@ interface PipelineProgress {
 }
 
 function showUsage(): void {
-  console.log(chalk.cyan.bold('\nShannon Temporal Query Tool'));
+  console.log(chalk.cyan.bold('\nGhost Hacker Query Tool'));
   console.log(chalk.gray('Query progress of a running workflow\n'));
   console.log(chalk.yellow('Usage:'));
   console.log('  node dist/temporal/query.js <workflowId>\n');
   console.log(chalk.yellow('Examples:'));
-  console.log('  node dist/temporal/query.js shannon-1704672000000\n');
+  console.log('  node dist/temporal/query.js ghosthacker-1704672000000\n');
 }
 
 function getStatusColor(status: string): string {

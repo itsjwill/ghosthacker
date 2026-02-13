@@ -273,7 +273,7 @@ This target has strong defenses. Before heavy testing:
 }
 
 /**
- * Integration with Shannon's workflow
+ * Integration with Ghost Hacker's workflow
  */
 export async function routeVulnerabilities(
   queueFile: string,

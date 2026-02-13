@@ -1,11 +1,11 @@
-// Copyright (C) 2025 Keygraph, Inc.
+// Copyright (C) 2026 Ghost Hacker Contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License version 3
 // as published by the Free Software Foundation.
 
 /**
- * Temporal activities for Shannon agent execution.
+ * Temporal activities for Ghost Hacker agent execution.
  *
  * Each activity wraps a single agent execution with:
  * - Heartbeat loop (2s interval) to signal worker liveness

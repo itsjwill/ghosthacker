@@ -21,27 +21,27 @@ cp .env.example .env
 #   CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000  # Prevents token limits during long reports
 
 # Start a pentest workflow
-./shannon start URL=<url> REPO=<path>
+./ghosthacker start URL=<url> REPO=<path>
 ```
 
 Examples:
 ```bash
-./shannon start URL=https://example.com REPO=/path/to/repo
-./shannon start URL=https://example.com REPO=/path/to/repo CONFIG=./configs/my-config.yaml
-./shannon start URL=https://example.com REPO=/path/to/repo OUTPUT=./my-reports
+./ghosthacker start URL=https://example.com REPO=/path/to/repo
+./ghosthacker start URL=https://example.com REPO=/path/to/repo CONFIG=./configs/my-config.yaml
+./ghosthacker start URL=https://example.com REPO=/path/to/repo OUTPUT=./my-reports
 ```
 
 ### Monitoring Progress
 ```bash
-./shannon logs                      # View real-time worker logs
-./shannon query ID=<workflow-id>    # Query specific workflow progress
+./ghosthacker logs                      # View real-time worker logs
+./ghosthacker query ID=<workflow-id>    # Query specific workflow progress
 # Temporal Web UI available at http://localhost:8233
 ```
 
-### Stopping Shannon
+### Stopping Ghost Hacker
 ```bash
-./shannon stop                      # Stop containers (preserves workflow data)
-./shannon stop CLEAN=true           # Full cleanup including volumes
+./ghosthacker stop                      # Stop containers (preserves workflow data)
+./ghosthacker stop CLEAN=true           # Full cleanup including volumes
 ```
 
 ### Options
@@ -62,7 +62,7 @@ TOTP generation is handled automatically via the `generate_totp` MCP tool during
 npm run build
 
 # Run with pipeline testing mode (fast, minimal deliverables)
-./shannon start URL=<url> REPO=<path> PIPELINE_TESTING=true
+./ghosthacker start URL=<url> REPO=<path> PIPELINE_TESTING=true
 ```
 
 ## Architecture & Components
@@ -75,7 +75,7 @@ npm run build
 - `src/queue-validation.ts` - Validates deliverables and agent prerequisites
 
 ### Temporal Orchestration Layer
-Shannon uses Temporal for durable workflow orchestration:
+Ghost Hacker uses Temporal for durable workflow orchestration:
 - `src/temporal/shared.ts` - Types, interfaces, query definitions
 - `src/temporal/workflows.ts` - Main workflow (pentestPipelineWorkflow)
 - `src/temporal/activities.ts` - Activity implementations with heartbeats
@@ -85,7 +85,7 @@ Shannon uses Temporal for durable workflow orchestration:
 
 Key features:
 - **Crash recovery** - Workflows resume automatically after worker restart
-- **Queryable progress** - Real-time status via `./shannon query` or Temporal Web UI
+- **Queryable progress** - Real-time status via `./ghosthacker query` or Temporal Web UI
 - **Intelligent retry** - Distinguishes transient vs permanent errors
 - **Parallel execution** - 5 concurrent agents in vulnerability/exploitation phases
 
@@ -186,24 +186,13 @@ The agent implements a crash-safe audit system with the following features:
 
 ## Development Notes
 
-### Learning from Reference Implementations
+### Temporal Patterns & Best Practices
 
-A working POC exists at `/Users/arjunmalleswaran/Code/shannon-pocs` that demonstrates the ideal Temporal + Claude Agent SDK integration. When implementing Temporal features, agents can ask questions in the chat, and the user will relay them to another Claude Code session working in that POC directory.
-
-**How to use this approach:**
-1. When stuck or unsure about Temporal patterns, write a specific question in the chat
-2. The user will ask an agent working on the POC to answer
-3. The user relays the answer (code snippets, patterns, explanations) back
-4. Apply the learned patterns to Shannon's codebase
-
-**Example questions to ask:**
-- "How does the POC structure its workflow to handle parallel activities?"
-- "Show me how heartbeats are implemented in the POC's activities"
-- "What retry configuration does the POC use for long-running agent activities?"
-- "How does the POC integrate Claude Agent SDK calls within Temporal activities?"
-
-**Reference implementation:**
-- **Temporal + Claude Agent SDK**: `/Users/arjunmalleswaran/Code/shannon-pocs` - working implementation demonstrating workflows, activities, worker setup, and SDK integration
+Ghost Hacker uses Temporal for durable workflow orchestration. Key patterns:
+- **Heartbeats**: Activities report progress via heartbeats for crash recovery
+- **Parallel execution**: Vulnerability and exploitation phases run 5 agents concurrently
+- **Retry configuration**: 3 attempts per agent with exponential backoff
+- **Query handlers**: Real-time workflow progress inspection via `getProgress` query
 
 ### Adding a New Agent
 1. Define the agent in `src/session-manager.ts` (add to `AGENT_QUEUE` and appropriate parallel group)
@@ -232,7 +221,7 @@ The application uses a comprehensive error handling system with:
 ### Testing Mode
 The agent includes a testing mode that skips external tool execution for faster development cycles:
 ```bash
-./shannon start URL=<url> REPO=<path> PIPELINE_TESTING=true
+./ghosthacker start URL=<url> REPO=<path> PIPELINE_TESTING=true
 ```
 
 ### Security Focus
@@ -259,7 +248,7 @@ The tool should only be used on systems you own or have explicit permission to t
 - `src/audit/` - Crash-safe logging and metrics system
 
 **Configuration:**
-- `shannon` - CLI script for running pentests
+- `ghosthacker` - CLI script for running pentests
 - `docker-compose.yml` - Temporal server + worker containers
 - `configs/` - YAML configs with `config-schema.json` for validation
 - `configs/router-config.json` - Router service configuration for multi-model support
@@ -270,11 +259,11 @@ The tool should only be used on systems you own or have explicit permission to t
 
 ### Router Mode (Multi-Model Support)
 
-Shannon supports routing Claude Agent SDK requests through alternative LLM providers via [claude-code-router](https://github.com/musistudio/claude-code-router).
+Ghost Hacker supports routing Claude Agent SDK requests through alternative LLM providers via [claude-code-router](https://github.com/musistudio/claude-code-router).
 
 **Enable router mode:**
 ```bash
-./shannon start URL=<url> REPO=<path> ROUTER=true
+./ghosthacker start URL=<url> REPO=<path> ROUTER=true
 ```
 
 **Supported Providers:**
@@ -295,7 +284,7 @@ OPENROUTER_API_KEY=sk-or-your-key
 ROUTER_DEFAULT=openrouter,google/gemini-3-flash-preview
 ```
 
-**Note:** Shannon is optimized for Anthropic's Claude models. Alternative providers are useful for cost savings during development but may produce varying results.
+**Note:** Ghost Hacker is optimized for Anthropic's Claude models. Alternative providers are useful for cost savings during development but may produce varying results.
 
 ## Troubleshooting
 
@@ -305,7 +294,7 @@ ROUTER_DEFAULT=openrouter,google/gemini-3-flash-preview
 ### Temporal & Docker Issues
 - **"Temporal not ready"**: Wait for health check or run `docker compose logs temporal`
 - **Worker not processing**: Ensure worker container is running with `docker compose ps`
-- **Reset workflow state**: `./shannon stop CLEAN=true` removes all Temporal data and volumes
+- **Reset workflow state**: `./ghosthacker stop CLEAN=true` removes all Temporal data and volumes
 - **Local apps unreachable**: Use `host.docker.internal` instead of `localhost` for URLs
 - **Container permissions**: On Linux, may need `sudo` for docker commands
 
@@ -320,3 +309,11 @@ Missing tools can be skipped using `PIPELINE_TESTING=true` mode during developme
 # View Temporal workflow history
 open http://localhost:8233
 ```
+
+<!-- MEMORY:START -->
+# ghosthacker
+
+_Last updated: 2026-02-13 | 0 active memories, 0 total_
+
+_For deeper context, use memory_search, memory_related, or memory_ask tools._
+<!-- MEMORY:END -->

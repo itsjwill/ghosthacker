@@ -1,14 +1,14 @@
-// Copyright (C) 2025 Keygraph, Inc.
+// Copyright (C) 2026 Ghost Hacker Contributors
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License version 3
 // as published by the Free Software Foundation.
 
 /**
- * Shannon Helper MCP Server
+ * Ghost Hacker MCP Server
  *
  * In-process MCP server providing save_deliverable and generate_totp tools
- * for Shannon penetration testing agents.
+ * for Ghost Hacker penetration testing agents.
  *
  * Replaces bash script invocations with native tool access.
  *
@@ -21,18 +21,18 @@ import { createSaveDeliverableTool } from './tools/save-deliverable.js';
 import { generateTotpTool } from './tools/generate-totp.js';
 
 /**
- * Create Shannon Helper MCP Server with target directory context
+ * Create Ghost Hacker MCP Server with target directory context
  *
  * Each workflow should create its own MCP server instance with its targetDir.
  * The save_deliverable tool captures targetDir in a closure, preventing race
  * conditions when multiple workflows run in parallel.
  */
-export function createShannonHelperServer(targetDir: string): ReturnType<typeof createSdkMcpServer> {
+export function createGhostHackerServer(targetDir: string): ReturnType<typeof createSdkMcpServer> {
   // Create save_deliverable tool with targetDir in closure (no global variable)
   const saveDeliverableTool = createSaveDeliverableTool(targetDir);
 
   return createSdkMcpServer({
-    name: 'shannon-helper',
+    name: 'ghosthacker-helper',
     version: '1.0.0',
     tools: [saveDeliverableTool, generateTotpTool],
   });
