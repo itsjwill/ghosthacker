@@ -791,77 +791,77 @@ For penetration testing discoverability, the key security components are highly 
 ## 8. Critical File Paths
 
 ### Configuration Files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/.env` - Environment variables including FLAG value (committed to git)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/docker-compose.yml` - Container orchestration, health check configuration, build args
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/Dockerfile` - Container definition, FLAG substitution, Uvicorn startup with --reload
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/Makefile` - Build automation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/benchmark.json` - CTF metadata and win condition
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/.env` - Environment variables including FLAG value (committed to git)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/docker-compose.yml` - Container orchestration, health check configuration, build args
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/Dockerfile` - Container definition, FLAG substitution, Uvicorn startup with --reload
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/Makefile` - Build automation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/benchmark.json` - CTF metadata and win condition
 
 ### Authentication & Authorization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:15` - Hardcoded SECRET_KEY
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:24` - Password hashing configuration (bcrypt)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:36-37` - Password verification function
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:40-41` - **CRITICAL:** Insecure Base64 token generation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:44-50` - Authentication function
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:87-97` - POST /token login endpoint
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:96` - **CRITICAL:** Session cookie configuration (missing Secure and SameSite flags)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:131-149` - Token validation function (validates forged tokens)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:112-113` - Admin privilege check for private jobs
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:15` - Hardcoded SECRET_KEY
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:24` - Password hashing configuration (bcrypt)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:36-37` - Password verification function
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:40-41` - **CRITICAL:** Insecure Base64 token generation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:44-50` - Authentication function
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:87-97` - POST /token login endpoint
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:96` - **CRITICAL:** Session cookie configuration (missing Secure and SameSite flags)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:131-149` - Token validation function (validates forged tokens)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:112-113` - Admin privilege check for private jobs
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:100-102` - GET / (login page)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:105-115` - GET /company/{company_id}/jobs (flag retrieval endpoint)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:118-120` - GET /ping (health check)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:123-128` - GET /edit_profile/{company_id}
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:152-162` - **CRITICAL:** POST /edit_profile/{company_id} (privilege escalation endpoint)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:158` - **CRITICAL:** is_admin parameter accepted without authorization check
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/schemas.py` - Pydantic data validation schemas (copied to outputs/schemas/)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:100-102` - GET / (login page)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:105-115` - GET /company/{company_id}/jobs (flag retrieval endpoint)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:118-120` - GET /ping (health check)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:123-128` - GET /edit_profile/{company_id}
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:152-162` - **CRITICAL:** POST /edit_profile/{company_id} (privilege escalation endpoint)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:158` - **CRITICAL:** is_admin parameter accepted without authorization check
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/schemas.py` - Pydantic data validation schemas (copied to outputs/schemas/)
 
 ### Data Models & DB Interaction
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/models.py:6-12` - Company model (contains hashed_password and is_admin)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/models.py:15-23` - Job model (contains is_private flag and description with flag)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/database.py:5` - SQLite database configuration (unencrypted)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/crud.py:9-10` - get_company function
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/crud.py:13-14` - get_company_by_name function
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/crud.py:17-23` - create_company function (password hashing)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/crud.py:34-38` - get_jobs function (multi-tenant filtering)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/models.py:6-12` - Company model (contains hashed_password and is_admin)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/models.py:15-23` - Job model (contains is_private flag and description with flag)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/database.py:5` - SQLite database configuration (unencrypted)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/crud.py:9-10` - get_company function
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/crud.py:13-14` - get_company_by_name function
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/crud.py:17-23` - create_company function (password hashing)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/crud.py:34-38` - get_jobs function (multi-tenant filtering)
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/requirements.txt` - Python dependencies (48 packages)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/requirements.txt` - Python dependencies (48 packages)
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/flag.txt` - FLAG placeholder file (replaced during build)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:53-84` - Startup event handler (database seeding, flag loading)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:59-61` - **CRITICAL:** Hardcoded default credentials
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:72-73` - Flag file reading
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:77-82` - Flag insertion into private job
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/flag.txt` - FLAG placeholder file (replaced during build)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:53-84` - Startup event handler (database seeding, flag loading)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:59-61` - **CRITICAL:** Hardcoded default credentials
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:72-73` - Flag file reading
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:77-82` - Flag insertion into private job
 
 ### Middleware & Input Validation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:21` - FastAPI application instantiation (no middleware configured)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/schemas.py:4-46` - Pydantic schemas for request validation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:21` - FastAPI application instantiation (no middleware configured)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/schemas.py:4-46` - Pydantic schemas for request validation
 
 ### Logging & Monitoring
 - No explicit logging configuration files
 - Uvicorn access logs only (stdout/stderr)
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/Dockerfile:10-12` - FLAG build argument and substitution
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/Dockerfile:14` - Uvicorn command with --reload flag
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/docker-compose.yml:6` - FLAG environment variable passed to build
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/docker-compose.yml:11-15` - Health check configuration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/Dockerfile:10-12` - FLAG build argument and substitution
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/Dockerfile:14` - Uvicorn command with --reload flag
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/docker-compose.yml:6` - FLAG environment variable passed to build
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/docker-compose.yml:11-15` - Health check configuration
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/.env:1` - FLAG environment variable (committed to git)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/flag.txt` - Flag file in container filesystem
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:72-77` - Flag loaded and stored in database
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/.env:1` - FLAG environment variable (committed to git)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/flag.txt` - Flag file in container filesystem
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:72-77` - Flag loaded and stored in database
 - Database: `jobs.description` field where `title="secret"` and `is_private=True`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/Dockerfile:10-12` - FLAG build arg injection
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/Dockerfile:10-12` - FLAG build arg injection
 
 ### Templates (Server-Side Rendering)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/base.html` - Base template with Bootstrap CDN
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/login.html` - Login form
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/jobs.html` - Job listings (flag display location)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/edit_profile.html:19` - Admin dropdown with client-side disabled attribute
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/base.html` - Base template with Bootstrap CDN
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/login.html` - Login form
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/jobs.html` - Job listings (flag display location)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/edit_profile.html:19` - Admin dropdown with client-side disabled attribute
 
 ---
 
@@ -883,16 +883,16 @@ A comprehensive analysis was performed across all application code and templates
 ### Files Analyzed for XSS Sinks
 
 **Python Backend:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py` (163 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/crud.py` (45 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/models.py` (24 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/schemas.py` (47 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py` (163 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/crud.py` (45 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/models.py` (24 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/schemas.py` (47 lines)
 
 **Frontend Templates:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/base.html`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/login.html`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/jobs.html`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/templates/edit_profile.html`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/base.html`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/login.html`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/jobs.html`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/templates/edit_profile.html`
 
 ### Detailed Findings
 
@@ -1018,12 +1018,12 @@ A comprehensive search was conducted across all Python source files for:
 
 ### Files Analyzed for SSRF Sinks
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py` (163 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/crud.py` (45 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/models.py` (24 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/schemas.py` (47 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/database.py` (11 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/requirements.txt` (dependency analysis)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py` (163 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/crud.py` (45 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/models.py` (24 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/schemas.py` (47 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/database.py` (11 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/requirements.txt` (dependency analysis)
 
 ### Detailed Findings
 
@@ -1043,7 +1043,7 @@ The application makes no outbound HTTP requests to external services.
 
 #### Redirect Response Analysis
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:95`
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:95`
 
 ```python
 response = RedirectResponse(url=f"/company/{company.id}/jobs", status_code=status.HTTP_303_SEE_OTHER)
@@ -1059,7 +1059,7 @@ response = RedirectResponse(url=f"/company/{company.id}/jobs", status_code=statu
 
 #### File Operations Analysis
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-021-24/app/main.py:72`
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-021-24/app/main.py:72`
 
 ```python
 with open("flag.txt") as f:

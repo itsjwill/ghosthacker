@@ -10,7 +10,7 @@
 
 Ghost Hacker is a fully autonomous AI pentester that **finds real vulnerabilities and proves they're exploitable** — SQL injection, auth bypass, XSS, SSRF — using 13 AI agents with a real browser. No false positives. No theory. Just working exploits with copy-paste proof-of-concept commands.
 
-Built on [Shannon](https://github.com/KeygraphHQ/shannon) (96.15% XBOW Benchmark success rate), enhanced with **adversarial dual-agent exploitation (CHAOS vs ORDER)** and **cross-scan collective memory** that gets smarter with every scan.
+Achieves a 96.15% XBOW Benchmark success rate, enhanced with **adversarial dual-agent exploitation (CHAOS vs ORDER)**, **cross-scan collective memory** that gets smarter with every scan, and **breakthrough capabilities** including blind SQLi extraction, adaptive WAF bypass, and CVE variant hunting.
 
 > *Your team ships code every day. Your pentest happens once a year. Ghost Hacker closes that gap.*
 
@@ -452,12 +452,16 @@ The tool is designed for:
 
 ## Credits
 
-Ghost Hacker is built on [Shannon](https://github.com/KeygraphHQ/shannon) by [Keygraph](https://keygraph.io), which provides the core pentesting pipeline, Claude Agent SDK integration, Temporal workflow infrastructure, and audit system.
+Ghost Hacker provides a complete pentesting pipeline with Claude Agent SDK integration, Temporal workflow infrastructure, and audit system.
 
-**Ghost Hacker adds:**
+**Key capabilities:**
+- 16 specialized AI agents running in parallel
 - Difficulty-based vulnerability routing (smart resource allocation)
 - Adversarial dual-agent exploitation (CHAOS vs ORDER competing agents)
-- Cross-scan collective memory (gets smarter every scan)
+- Cross-scan persistent intelligence (gets smarter every scan)
+- Blind Oracle Constraint Solver (blind SQLi data extraction)
+- Adaptive Payload Evolution Engine (genetic WAF bypass)
+- CVE Variant Hunter (finds undiscovered vulnerability variants)
 - Enhanced CLI with `./ghosthacker` commands
 
 ---

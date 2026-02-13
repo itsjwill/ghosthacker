@@ -115,7 +115,7 @@ Based on nmap scan from pre-recon deliverable:
 **NOT IMPLEMENTED** - The application has zero authentication infrastructure.
 
 **Evidence:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:1-5`
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:1-5`
 - Imports: `json`, `FastAPI`, `HTTPException`, `Request`, `HTMLResponse`, `sqlite3`
 - No authentication imports (no `Depends`, `OAuth2`, `HTTPBearer`, `Security`, etc.)
 - No session libraries imported
@@ -436,23 +436,23 @@ While there is a "premium" job type blocked by the application, this is NOT vert
 
 ```
 STEP 1: User Input Entry Point
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:41
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:41
   Code: data = await request.json()
   Description: FastAPI parses incoming JSON request body
 
 STEP 2: Parameter Extraction
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:42
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:42
   Code: job_type = data.get('job_type', '')
   Description: Extracts job_type parameter with empty string default
 
 STEP 3: Database Connection
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:43-44
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:43-44
   Code: conn = get_db_connection()
         cursor = conn.cursor()
   Description: Opens SQLite database connection
 
 STEP 4: Access Control Check
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:45-47
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:45-47
   Code: if job_type and job_type == 'premium':
             conn.close()
             return HTMLResponse(content=json.dumps({"detail": "Access denied"}), 
@@ -460,7 +460,7 @@ STEP 4: Access Control Check
   Description: Blocks exact string match 'premium' - SQL injection can bypass this
 
 STEP 5: Weak Input Sanitization [BYPASSABLE]
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:49-50
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:49-50
   Code: for word in ['OR', 'or', 'AND', 'and', 'SELECT', 'select', 
                      'UNION', 'union', 'FROM', 'from', 'WHERE', 'where']:
             job_type = job_type.replace(word, '')
@@ -473,23 +473,23 @@ STEP 5: Weak Input Sanitization [BYPASSABLE]
     - No quote character filtering
 
 STEP 6: Vulnerable SQL Query Construction [CRITICAL VULNERABILITY]
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:53
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:53
   Code: query = f"SELECT * FROM jobs WHERE type = '{job_type}'"
   Description: Direct f-string interpolation - user input inserted into SQL without parameterization
   Vulnerability Type: SQL Injection via string concatenation
 
 STEP 7: Dangerous Sink - Query Execution
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:57
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:57
   Code: cursor.execute(query)
   Description: Executes the user-controlled SQL query
 
 STEP 8: Result Processing
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:58
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:58
   Code: jobs = cursor.fetchall()
   Description: Retrieves all query results
 
 STEP 9: JSON Response
-  Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:60-61
+  Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:60-61
   Code: return [{"id": job["id"], "name": job["name"], "type": job["type"],
                  "description": job["description"]} for job in jobs]
   Description: Returns database results as JSON (including any injected data)
@@ -497,7 +497,7 @@ STEP 9: JSON Response
 
 **VULNERABLE CODE SNIPPET:**
 ```python
-# /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py:39-61
+# /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py:39-61
 
 @app.post("/jobs")
 async def jobs(request: Request):
@@ -636,8 +636,8 @@ else:
 - No shell command construction
 
 **Files Analyzed:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py` (complete application)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/static/index.html` (frontend)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py` (complete application)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/static/index.html` (frontend)
 
 **Conclusion:** Application contains NO command injection attack surface in network-accessible code paths.
 
@@ -687,7 +687,7 @@ data.forEach(user => {
 resultDiv.innerHTML = jobsTable;  // VULNERABLE: No sanitization
 ```
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/static/index.html:74`
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/static/index.html:74`
 
 **Exploitation:** Attacker uses SQL injection to insert XSS payloads like `<img src=x onerror=alert(document.cookie)>` into database fields, which execute when rendered by victims.
 

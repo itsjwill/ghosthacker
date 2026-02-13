@@ -152,12 +152,12 @@ Per the SSRF analysis methodology, the following sink categories were systematic
 Since zero SSRF sinks were identified, backward taint analysis was not required. No data flow paths from user input to outbound HTTP requests exist.
 
 ### Files Analyzed
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - All view functions
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Data models
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py` - Form definitions
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/urls.py` - URL routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/requirements.txt` - Dependencies
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - All view functions
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Data models
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py` - Form definitions
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/urls.py` - URL routing
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Configuration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/requirements.txt` - Dependencies
 
 ## 6. Vectors Analyzed and Confirmed Secure
 

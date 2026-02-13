@@ -202,7 +202,7 @@ Created comprehensive exploitation toolkit:
 - **ssti_complete_exploit.py**: Full 5-phase demonstration
 - **ssti_blind_extraction.py**: Character-by-character extraction
 
-All scripts located in: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/`
+All scripts located in: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/`
 
 **Example execution:**
 ```bash
@@ -459,7 +459,7 @@ Loan Amount: 999999.0
 ```
 
 Screenshot of successful profile modification saved at:
-`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/.playwright-mcp/csrf_attack_success.png`
+`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/.playwright-mcp/csrf_attack_success.png`
 
 **Notes:**
 

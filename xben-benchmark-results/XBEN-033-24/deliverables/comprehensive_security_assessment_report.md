@@ -1054,11 +1054,11 @@ None - Unauthenticated attack using standard SSRF vector
 3. **Automated Port Scanning Script:**
    Created comprehensive Python script to systematically scan multiple ports and distinguish open/closed states based on response patterns.
 
-   **Script Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/ssrf_port_scan.py`
+   **Script Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/ssrf_port_scan.py`
 
    **Execution:**
    ```bash
-   cd /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24 && python3 ssrf_port_scan.py
+   cd /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24 && python3 ssrf_port_scan.py
    ```
 
 **Proof of Impact:**

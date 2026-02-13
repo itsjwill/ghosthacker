@@ -66,7 +66,7 @@ The following components were analyzed and found to have robust defenses against
 
 ### 5.1 PhantomJS Implementation - Complete Source-to-Sink Analysis
 
-**SINK:** `page.open(input, ...)` in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/check.js:20`
+**SINK:** `page.open(input, ...)` in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/check.js:20`
 
 **Backward Taint Analysis:**
 

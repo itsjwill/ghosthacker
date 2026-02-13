@@ -113,7 +113,7 @@ Executed query: Returns all rows (boolean OR condition always true)
 **Note:** The empty `job_type` case (line 54-55) uses a hardcoded query with no user input interpolation, making it safe. However, any non-empty input follows the vulnerable path.
 
 ### Command Injection Analysis:
-**Codebase Reviewed:** Complete application source at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-006-24/app/main.py`
+**Codebase Reviewed:** Complete application source at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-006-24/app/main.py`
 
 **Findings:** 
 - No imports of command execution modules (`subprocess`, `os.system`, `os.popen`)

@@ -154,12 +154,12 @@ BROWSER RENDERS XSS ❌
 
 **Source Details:**
 - **Parameter:** `markdown_text`
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:19`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:19`
 - **Code:** `markdown_text = request.form.get('markdown_text')`
 - **User Control:** 100% - Direct POST parameter
 
 **Sink Details:**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html:33`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html:33`
 - **Code:** `{{ html_content|safe }}`
 - **Render Context:** HTML_BODY (inside `<div class="html-output">`)
 - **Required Encoding:** HTML entity encoding (e.g., `<` → `&lt;`)
@@ -245,13 +245,13 @@ BROWSER RENDERS XSS ❌
 
 **Source Details:**
 - **Parameter:** `url`
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:18`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:18`
 - **Code:** `url = request.form.get('url')`
 - **User Control:** 100% - Attacker controls URL pointing to malicious content
 - **Fetch Mechanism:** `urllib.request.urlopen()` at app.py:27-30
 
 **Sink Details:**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html:33`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html:33`
 - **Code:** `{{ html_content|safe }}`
 - **Render Context:** HTML_BODY (inside `<div class="html-output">`)
 - **Required Encoding:** HTML entity encoding

@@ -33,7 +33,7 @@
 
 **Endpoint:** `GET /resource?filename=`
 
-**Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 16-19
+**Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 16-19
 
 **Vulnerable Code:**
 ```python
@@ -76,7 +76,7 @@ def resource():
 
 **Code Evidence:**
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py
 from flask import Flask
 app = Flask(__name__)  # No SECRET_KEY, no session config
 from app import routes
@@ -287,9 +287,9 @@ This analysis followed the prescribed methodology for authorization vulnerabilit
 ### Code Coverage
 
 **100% of network-accessible code analyzed:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` (7 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (19 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html` (HTML template)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` (7 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (19 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html` (HTML template)
 
 **All endpoints from recon Section 8 analyzed:**
 - Section 8.1 (Horizontal) - Status: NOT APPLICABLE

@@ -134,7 +134,7 @@ Multiple subdomains identified in test environment that could expand attack surf
 
 **Flag Captured:** `flag{c131ab68-2257-46c7-bf43-a1df6742f4f7}`
 
-Full exploitation script available at: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/forge_jwt.py`
+Full exploitation script available at: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/forge_jwt.py`
 
 Execution output:
 ```

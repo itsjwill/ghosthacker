@@ -142,13 +142,13 @@ Authenticated endpoints extract and validate JWT tokens manually from cookies (n
    - **Success Response:** HTML redirect to `/company/{company.id}/jobs` with Set-Cookie header
    - **Failure Response:** HTML login page with error message "Incorrect username or password"
    - **Session Creation:** Sets `access_token` HTTP-only cookie containing JWT
-   - **File Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:93-105`
+   - **File Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:93-105`
 
 2. **GET /** (main.py:108-110)
    - **Purpose:** Login page UI
    - **Authentication:** None required (public)
    - **Response:** HTML login form
-   - **File Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:108-110`
+   - **File Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:108-110`
 
 **Missing Authentication Endpoints:**
 - ❌ **No logout endpoint:** Users cannot invalidate their JWT tokens
@@ -946,14 +946,14 @@ The absence of certain components is as significant as what's present: no middle
 ## 8. Critical File Paths
 
 ### Configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/docker-compose.yml` - Docker orchestration, FLAG build argument
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/Dockerfile` - Container build, flag injection via sed
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/.env` - FLAG environment variable (not loaded by app)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/Makefile` - Build automation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/benchmark.json` - CTF/benchmark metadata
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/docker-compose.yml` - Docker orchestration, FLAG build argument
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/Dockerfile` - Container build, flag injection via sed
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/.env` - FLAG environment variable (not loaded by app)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/Makefile` - Build automation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/benchmark.json` - CTF/benchmark metadata
 
 ### Authentication & Authorization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py` - **PRIMARY SECURITY FILE**
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py` - **PRIMARY SECURITY FILE**
   - Line 14: Hardcoded JWT secret (CRITICAL VULNERABILITY)
   - Lines 35-36: Password verification function
   - Lines 39-47: JWT token creation
@@ -964,32 +964,32 @@ The absence of certain components is as significant as what's present: no middle
   - Lines 149-174: GET /edit_profile/{id}
   - Lines 177-205: POST /edit_profile/{id} (PRIVILEGE ESCALATION VULNERABILITY)
   - Line 104: Cookie configuration (missing Secure and SameSite flags)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/crud.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/crud.py`
   - Lines 4-6: Bcrypt password context configuration
   - Lines 10-23: Company CRUD operations
   - Lines 34-38: Job retrieval with premium filtering
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py` - All route definitions (6 endpoints)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py` - All route definitions (6 endpoints)
 - Auto-generated endpoints: /docs, /redoc, /openapi.json (FastAPI defaults)
 
 ### Data Models & DB Interaction
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/models.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/models.py`
   - Lines 6-13: Company model (id, name, hashed_password, role, level)
   - Lines 16-24: Job model (id, title, description, company_id, premium)
   - Line 11: Unused 'role' column
   - Line 12: 'level' column controlling premium access
   - Line 20: 'description' column storing CTF flag
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/database.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/database.py`
   - Lines 5-7: Database URL and engine configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/schemas.py` - Pydantic models (unused in endpoints)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/schemas.py` - Pydantic models (unused in endpoints)
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/requirements.txt` - 48 pinned Python dependencies
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/requirements.txt` - 48 pinned Python dependencies
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/flag.txt` - CTF flag file (injected at build time)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/flag.txt` - CTF flag file (injected at build time)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py`
   - Line 14: JWT SECRET_KEY (hardcoded)
   - Lines 64-68: Hardcoded test credentials
   - Lines 78-79: Flag file read
@@ -997,33 +997,33 @@ The absence of certain components is as significant as what's present: no middle
 
 ### Middleware & Input Validation
 - No dedicated middleware files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:21` - Jinja2Templates initialization (auto-escaping enabled)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/schemas.py` - Pydantic schemas (defined but not used)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:21` - Jinja2Templates initialization (auto-escaping enabled)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/schemas.py` - Pydantic schemas (defined but not used)
 
 ### Logging & Monitoring
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:144-146` - /ping health check endpoint
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:144-146` - /ping health check endpoint
 - **No logging configuration files** - logging not implemented
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/docker-compose.yml` - Service definition, FLAG injection
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/Dockerfile` - Image build with flag substitution
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/docker-compose.yml` - Service definition, FLAG injection
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/Dockerfile` - Image build with flag substitution
 - **No Kubernetes manifests** - single container deployment
 - **No Nginx configuration** - direct port 80 exposure
 - **No reverse proxy** - application handles HTTP directly
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/Dockerfile:10-12` - FLAG ARG and sed injection
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/.env:1` - FLAG environment variable
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/flag.txt` - Flag file (replaced during build)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:78-83` - Flag read and database insert
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/models.py:20` - Job.description column (flag storage)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/Dockerfile:10-12` - FLAG ARG and sed injection
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/.env:1` - FLAG environment variable
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/flag.txt` - Flag file (replaced during build)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:78-83` - Flag read and database insert
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/models.py:20` - Job.description column (flag storage)
 - Database file (runtime): `/app/test.db` inside container
 
 ### Templates
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/base.html` - Base layout, navigation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/login.html` - Login form
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/jobs.html` - Job listings display (flag rendering at line 10)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/edit_profile.html` - Profile edit form (disabled dropdown at lines 18-22)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/base.html` - Base layout, navigation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/login.html` - Login form
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/jobs.html` - Job listings display (flag rendering at line 10)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/edit_profile.html` - Profile edit form (disabled dropdown at lines 18-22)
 
 ---
 
@@ -1034,7 +1034,7 @@ The absence of certain components is as significant as what's present: no middle
 ### HTML Body Context
 
 **Sink 1: Job Title and Description Rendering**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/jobs.html:10`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/jobs.html:10`
 - **Code:** `<p>{{ job.title }}:{{ job.description }}</p>`
 - **Render Context:** HTML content context (inside paragraph element)
 - **User-Controllable Variables:** `job.title`, `job.description`
@@ -1050,7 +1050,7 @@ The absence of certain components is as significant as what's present: no middle
 - **Current Protection:** Renders as `&lt;script&gt;alert(document.cookie)&lt;/script&gt;`
 
 **Sink 2: Success Message in Edit Profile**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/edit_profile.html:9`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/edit_profile.html:9`
 - **Code:** `{{ msg }}`
 - **Render Context:** HTML content context within alert div
 - **User-Controllable Variable:** `msg`
@@ -1060,7 +1060,7 @@ The absence of certain components is as significant as what's present: no middle
 - **Potential Risk:** If future code changes allow user-controlled messages, XSS possible if auto-escaping disabled
 
 **Sink 3: Error Message in Login Page**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/login.html:9`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/login.html:9`
 - **Code:** `{{ error }}`
 - **Render Context:** HTML content context within alert div
 - **User-Controllable Variable:** `error`
@@ -1069,7 +1069,7 @@ The absence of certain components is as significant as what's present: no middle
 - **Severity:** LOW (static string, no user control)
 
 **Sink 4: Company ID in Jobs Page Header**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/jobs.html:6`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/jobs.html:6`
 - **Code:** `<h2>Jobs for Company {{ company_id }}</h2>`
 - **Render Context:** HTML content context (heading text)
 - **User-Controllable Variable:** `company_id`
@@ -1081,7 +1081,7 @@ The absence of certain components is as significant as what's present: no middle
 ### HTML Attribute Context
 
 **Sink 5: Company Name in Input Value Attribute**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/edit_profile.html:15`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/edit_profile.html:15`
 - **Code:** `<input type="text" class="form-control" id="name" name="name" value="{{ company.name }}" required>`
 - **Render Context:** HTML attribute context (value attribute of text input)
 - **User-Controllable Variable:** `company.name`
@@ -1094,7 +1094,7 @@ The absence of certain components is as significant as what's present: no middle
 - **Severity:** MEDIUM (user-controllable but protected by auto-escaping)
 
 **Sink 6: Company ID in Navigation Links**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/base.html:24-25`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/base.html:24-25`
 - **Code:** 
   ```html
   <a class="nav-link" href="/company/{{company_id}}/jobs">View Jobs</a>
@@ -1108,7 +1108,7 @@ The absence of certain components is as significant as what's present: no middle
 - **Severity:** LOW (integer, authenticated)
 
 **Sink 7: Company ID in Form Action**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/templates/edit_profile.html:12`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/templates/edit_profile.html:12`
 - **Code:** `<form method="post" action="/edit_profile/{{company.id}}">`
 - **Render Context:** URL in form action attribute
 - **User-Controllable Variable:** `company.id`
@@ -1242,7 +1242,7 @@ The application demonstrates **strong XSS protection** through consistent use of
 **FINDING: NO HTTP CLIENT USAGE DETECTED**
 
 **Dependency Analysis:**
-- **httpx==0.27.0** listed in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/requirements.txt:17`
+- **httpx==0.27.0** listed in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/requirements.txt:17`
 - **Search Results:** No import statements or usage found
   - No `import httpx` or `from httpx import` in any Python file
   - No `httpx.get()`, `httpx.post()`, `httpx.Client()`, or `httpx.AsyncClient()` calls
@@ -1264,7 +1264,7 @@ Searched for alternative HTTP client libraries:
 
 **File Operation Analysis:**
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:78-79`
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:78-79`
 ```python
 with open("flag.txt") as f:
     flag = f.read()
@@ -1291,7 +1291,7 @@ with open("flag.txt") as f:
 
 **Redirect Analysis:**
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:103`
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:103`
 ```python
 response = RedirectResponse(url=f"/company/{company.id}/jobs", status_code=status.HTTP_303_SEE_OTHER)
 ```
@@ -1494,7 +1494,7 @@ Searched all Python files for socket operations:
 
 **Health Check Analysis:**
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py:144-146`
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py:144-146`
 ```python
 @app.get("/ping")
 def ping():
@@ -1552,11 +1552,11 @@ def ping():
 
 **Files Analyzed:**
 ```
-/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/main.py (206 lines)
-/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/crud.py (45 lines)
-/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/models.py (25 lines)
-/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/schemas.py (47 lines)
-/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-005-24/app/database.py (11 lines)
+/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/main.py (206 lines)
+/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/crud.py (45 lines)
+/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/models.py (25 lines)
+/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/schemas.py (47 lines)
+/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-005-24/app/database.py (11 lines)
 ```
 
 **Unused Dependencies:**

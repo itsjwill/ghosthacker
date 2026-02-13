@@ -186,12 +186,12 @@ The application is built using Django 4.2.13, a high-level Python web framework 
 From a security perspective, Django 4.2.13 provides several built-in protections including automatic SQL injection prevention through its ORM, CSRF token validation, XSS protection via template auto-escaping, and clickjacking prevention through X-Frame-Options middleware. However, the application's configuration undermines many of these protections through `DEBUG = True`, which exposes detailed stack traces, database queries, and settings information in error pages. The core dependencies are minimal and include `mysqlclient==2.2.4` for database connectivity, `django-bootstrap4==24.3` for frontend components, and `beautifulsoup4==4.12.3` for HTML parsing. Notably absent are production-grade dependencies such as Gunicorn/uWSGI for WSGI serving, security-focused libraries like django-ratelimit or django-csp, and monitoring/logging frameworks.
 
 **Architectural Pattern:**
-This is a **monolithic web application** following Django's MVT (Model-View-Template) pattern with a traditional server-rendered architecture. The codebase is organized into a single Django project (`art_gallery`) with one main application module (`accounts`) handling all user-facing functionality. The application structure is straightforward: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/` contains project-level configuration (settings.py, urls.py, wsgi.py), while `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/` contains the application logic (models.py, views.py, forms.py, urls.py, templates/).
+This is a **monolithic web application** following Django's MVT (Model-View-Template) pattern with a traditional server-rendered architecture. The codebase is organized into a single Django project (`art_gallery`) with one main application module (`accounts`) handling all user-facing functionality. The application structure is straightforward: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/` contains project-level configuration (settings.py, urls.py, wsgi.py), while `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/` contains the application logic (models.py, views.py, forms.py, urls.py, templates/).
 
 The trust boundary analysis reveals several concerning patterns: the application trusts session data as authoritative without additional validation, creating an implicit trust boundary between the session storage and application logic. The multi-step registration flow (step1 → step2 → step3) stores sensitive data including **plaintext passwords** in the session backend (lines 14-15 in views.py: `request.session['password'] = form.cleaned_data['password']`), treating session storage as a secure temporary credential store when it is not designed for this purpose. The primary trust boundary should exist between unauthenticated and authenticated users, enforced by Django's `@login_required` decorator, but only a single endpoint (`/accounts/preferences/`) uses this protection, leaving most functionality accessible without authentication. There is no multi-tenancy, no API-level authorization beyond basic authentication checks, and no role-based access control implementation despite the presence of an `is_premium` field in the user model that suggests intended privilege separation.
 
 **Critical Security Components:**
-The application implements several security components, though many are inadequately configured. Authentication is handled through a custom Django user model (`Account` extending `AbstractUser`) located at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py` with custom fields for `is_premium` (BooleanField) and `name` (CharField, unique=True, max_length=40). The authentication backend uses Django's default `ModelBackend` with email as the username field, authenticating against the custom Account model with PBKDF2-SHA256 password hashing.
+The application implements several security components, though many are inadequately configured. Authentication is handled through a custom Django user model (`Account` extending `AbstractUser`) located at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py` with custom fields for `is_premium` (BooleanField) and `name` (CharField, unique=True, max_length=40). The authentication backend uses Django's default `ModelBackend` with email as the username field, authenticating against the custom Account model with PBKDF2-SHA256 password hashing.
 
 Session management uses Django's session framework with database-backed storage (default configuration). Critical security issues exist in the session configuration: `SESSION_COOKIE_SECURE` is not explicitly set (defaults to False), allowing session cookies to be transmitted over unencrypted HTTP connections and making them vulnerable to interception. `SESSION_COOKIE_HTTPONLY` defaults to True (good), but without explicit configuration, this could be inadvertently changed. The `SESSION_COOKIE_SAMESITE` setting is not configured, defaulting to 'Lax' in Django 4.2, providing some CSRF protection but not the strictest setting. Most critically, sensitive data including plaintext passwords are stored in session storage during the registration flow (views.py:15), violating fundamental security principles.
 
@@ -219,25 +219,25 @@ The application implements a custom authentication system built on Django's auth
 
 | Endpoint | File Path | Line | HTTP Method | Purpose | Authentication Required |
 |----------|-----------|------|-------------|---------|------------------------|
-| `/accounts/register/step1/` | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 10-20 | GET/POST | Registration start - collect name/password | No |
-| `/accounts/register/step2/` | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 22-33 | GET/POST | Registration step 2 - collect email | No (session-based) |
-| `/accounts/register/step3/` | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 35-61 | GET/POST | Registration completion - SSTI vulnerability | No (session-based) |
-| `/accounts/login/` | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 64-76 | GET/POST | User authentication endpoint | No |
-| `/accounts/logout/` | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 102-104 | GET/POST | Logout and session termination | No |
-| `/accounts/home/` | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 78-79 | GET | Redirect to gallery | No |
+| `/accounts/register/step1/` | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 10-20 | GET/POST | Registration start - collect name/password | No |
+| `/accounts/register/step2/` | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 22-33 | GET/POST | Registration step 2 - collect email | No (session-based) |
+| `/accounts/register/step3/` | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 35-61 | GET/POST | Registration completion - SSTI vulnerability | No (session-based) |
+| `/accounts/login/` | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 64-76 | GET/POST | User authentication endpoint | No |
+| `/accounts/logout/` | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 102-104 | GET/POST | Logout and session termination | No |
+| `/accounts/home/` | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` | 78-79 | GET | Redirect to gallery | No |
 
 **Login Endpoint Details:**
 The login view (views.py:64-76) uses Django's `AuthenticationForm` and `authenticate()` function (line 70). On successful authentication, users are logged in via `auth_login(request, user)` (line 72) which creates a new session and redirects to `/accounts/home/` (which then redirects to `/`). Failed login attempts render the form again with error messages, but there is **no rate limiting, account lockout, or CAPTCHA protection**, making this endpoint vulnerable to credential stuffing and brute force attacks.
 
 **Session Management & Cookie Configuration:**
-Session cookie security flags are **critically misconfigured**. Examining the settings file at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py`, there are **NO explicit session cookie security configurations present**. This means Django uses default values:
+Session cookie security flags are **critically misconfigured**. Examining the settings file at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py`, there are **NO explicit session cookie security configurations present**. This means Django uses default values:
 
 - **HttpOnly:** Defaults to `True` (GOOD) - prevents JavaScript access to session cookies, mitigating some XSS-based session theft
 - **Secure:** Defaults to `False` (**CRITICAL VULNERABILITY**) - session cookies are transmitted over unencrypted HTTP connections, enabling man-in-the-middle attacks to steal session identifiers
 - **SameSite:** Defaults to `'Lax'` in Django 4.2 (ADEQUATE) - provides some CSRF protection but not as strict as `'Strict'`
 - **SESSION_COOKIE_AGE:** Defaults to 1209600 seconds (2 weeks) - long-lived sessions increase the window of opportunity for session hijacking
 
-**Specific file and line for session cookie configuration:** The settings.py file at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` **does not contain any explicit session cookie security flag configuration**. The middleware stack includes `django.contrib.sessions.middleware.SessionMiddleware` at line 34, but the security flags must be added to the settings file. The recommended configuration should be added to settings.py:
+**Specific file and line for session cookie configuration:** The settings.py file at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` **does not contain any explicit session cookie security flag configuration**. The middleware stack includes `django.contrib.sessions.middleware.SessionMiddleware` at line 34, but the security flags must be added to the settings file. The recommended configuration should be added to settings.py:
 
 ```python
 # Session security settings (currently MISSING)
@@ -248,7 +248,7 @@ SESSION_COOKIE_AGE = 3600  # 1 hour session timeout
 ```
 
 **Authorization Model:**
-The application implements an extremely minimal authorization model with only **one protected endpoint** using the `@login_required` decorator at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81` protecting the `preferences_view` function. The decorator configuration in settings.py specifies:
+The application implements an extremely minimal authorization model with only **one protected endpoint** using the `@login_required` decorator at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81` protecting the `preferences_view` function. The decorator configuration in settings.py specifies:
 - `LOGIN_URL = '/accounts/login/'` (line 109) - redirect target for unauthenticated users
 - `LOGIN_REDIRECT_URL = '/accounts/home/'` (line 110) - post-login destination
 - `LOGOUT_REDIRECT_URL = '/accounts/login/'` (line 111) - post-logout destination
@@ -266,7 +266,7 @@ The Account model includes an `is_premium` boolean field (models.py:8) suggestin
 **No multi-tenancy implementation exists.** The application uses a single database (`art_db`), single schema, and no tenant isolation mechanisms. All users share the same namespace with the uniqueness constraint on the `name` field (models.py:8) being the only isolation. If multi-tenancy were to be added, the current architecture provides no foundation for secure tenant separation.
 
 **SSO/OAuth/OIDC Flows:**
-**Not applicable - no SSO, OAuth, or OIDC implementation present.** The application uses only username/password authentication with no third-party identity provider integration. No OAuth libraries are present in requirements.txt (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/requirements.txt`), and no callback endpoints, state parameter validation, or nonce verification code exists in the codebase.
+**Not applicable - no SSO, OAuth, or OIDC implementation present.** The application uses only username/password authentication with no third-party identity provider integration. No OAuth libraries are present in requirements.txt (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/requirements.txt`), and no callback endpoints, state parameter validation, or nonce verification code exists in the codebase.
 
 **Critical Security Findings Summary:**
 1. **Plaintext passwords in sessions** (views.py:15) - violates every security standard
@@ -282,7 +282,7 @@ The Account model includes an `is_premium` boolean field (models.py:8) suggestin
 ## 4. Data Security & Storage
 
 **Database Security:**
-The application uses MySQL 8.4 as its database backend with **critically insecure configuration** present in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` lines 65-74. The database configuration demonstrates multiple severe security violations:
+The application uses MySQL 8.4 as its database backend with **critically insecure configuration** present in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` lines 65-74. The database configuration demonstrates multiple severe security violations:
 
 ```python
 DATABASES = {
@@ -302,14 +302,14 @@ DATABASES = {
 
 2. **Hardcoded Credentials (Line 71):** The database password `art_gallery_db_pass` is hardcoded directly in the settings file, which is typically committed to version control. This exposes credentials in source code repositories, container images, and to anyone with read access to the application codebase. The same password appears in three locations:
    - `settings.py:71`
-   - `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/docker-compose.yml:7` in health check command
-   - `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/mysql/Dockerfile:3` as environment variable
+   - `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/docker-compose.yml:7` in health check command
+   - `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/mysql/Dockerfile:3` as environment variable
 
 3. **No Connection Encryption:** The database configuration lacks an `OPTIONS` dictionary with SSL/TLS settings. This means all database traffic between the Django application container and MySQL container is transmitted **in plaintext** over the Docker network. While this is an internal network, the lack of encryption violates defense-in-depth principles and exposes data if the network is compromised or if containers are moved to different hosts.
 
 4. **No Connection Pooling or Timeout Configuration:** The database configuration uses Django's default connection handling without custom pooling or timeout settings, potentially leading to connection exhaustion under load and making the application vulnerable to denial-of-service attacks through database connection saturation.
 
-The database access control is further compromised by the MySQL container configuration in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/mysql/Dockerfile` which sets `ENV MYSQL_ROOT_PASSWORD=art_gallery_db_pass` at line 3, explicitly creating the root password that the application uses. Query safety is **adequate** as the application exclusively uses Django ORM methods for all database operations—no raw SQL queries using `cursor.execute()`, `.raw()`, or `.extra()` methods were found in the codebase, providing protection against SQL injection attacks.
+The database access control is further compromised by the MySQL container configuration in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/mysql/Dockerfile` which sets `ENV MYSQL_ROOT_PASSWORD=art_gallery_db_pass` at line 3, explicitly creating the root password that the application uses. Query safety is **adequate** as the application exclusively uses Django ORM methods for all database operations—no raw SQL queries using `cursor.execute()`, `.raw()`, or `.extra()` methods were found in the codebase, providing protection against SQL injection attacks.
 
 **Data Flow Security:**
 The application handles several sensitive data types with varying levels of protection. **Passwords** follow a critically flawed flow: collected at step 1 (views.py:10-20) → stored in plaintext in session at line 15 (`request.session['password'] = form.cleaned_data['password']`) → retrieved at step 3 (line 49) → hashed via `a.set_password(request.session['password'])` → stored in database using Django's PBKDF2-SHA256 algorithm. While the final storage uses secure hashing, the intermediate plaintext storage in sessions violates OWASP, NIST, PCI-DSS, and GDPR requirements. If the session backend is compromised or if database sessions are accessed, plaintext passwords are exposed.
@@ -318,7 +318,7 @@ The application handles several sensitive data types with varying levels of prot
 
 **Session data** serves as a temporary credential store during registration, containing: `request.session['name']`, `request.session['password']`, and `request.session['email']`. With database-backed sessions (the default), this sensitive data is serialized and stored in the `django_session` table. While Django signs session data using the SECRET_KEY, it does **not encrypt** session contents by default. The hardcoded SECRET_KEY at settings.py:11 means attackers with source code access can decode session data, and anyone with database access can read the plaintext session payloads.
 
-The application includes a **CTF flag** with special handling: the flag is stored in the filesystem at `/flag` (created by Dockerfile at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/Dockerfile:21` via `RUN echo -n $FLAG > /flag`) and read at views.py:39 (`flag = open('/flag').read()`). This flag is intentionally exposed in the template context at lines 51 and 61, making it accessible via the SSTI vulnerability. The flag value in development is defined in `.env:1` as `FLAG="flag{98d2361b-f883-4daa-93f7-cb5c91a32c69}"`.
+The application includes a **CTF flag** with special handling: the flag is stored in the filesystem at `/flag` (created by Dockerfile at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/Dockerfile:21` via `RUN echo -n $FLAG > /flag`) and read at views.py:39 (`flag = open('/flag').read()`). This flag is intentionally exposed in the template context at lines 51 and 61, making it accessible via the SSTI vulnerability. The flag value in development is defined in `.env:1` as `FLAG="flag{98d2361b-f883-4daa-93f7-cb5c91a32c69}"`.
 
 **Encryption Implementations:**
 The application has **minimal cryptographic implementation** with no custom encryption code. The only cryptographic protection is Django's built-in password hashing using PBKDF2-SHA256 (Django 4.2.13 default), configured via `AUTH_PASSWORD_VALIDATORS` at settings.py:76-89. The password hashing is correctly implemented through the `set_password()` method (views.py:49), which applies the algorithm automatically.
@@ -344,15 +344,15 @@ The application exposes **9 HTTP endpoints** on port 80 accessible via the Djang
 
 **1. Public Gallery View (`/`)**
 - **Handler:** `gallery_view` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:85-100`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:85-100`
 - **Methods:** GET/POST
 - **Authentication:** None required
 - **Input Parameters:** None
-- **Security Analysis:** This endpoint displays a hardcoded gallery of 9 art items with names, prices, and descriptions. The template at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html` includes a potential stored XSS sink at line 44: `<h3 class="my-4 text-center">Welcome, {{ user.name }}!</h3>`. While Django's auto-escaping provides protection, the `user.name` field is user-controlled during registration and could contain malicious content if combined with the SSTI vulnerability to bypass sanitization. The gallery context contains hardcoded data for 9 items (Mona Lisa, Starry Night, The Scream, etc.) with no database queries, reducing attack surface. No file upload, search functionality, or dynamic data rendering exists beyond the username display.
+- **Security Analysis:** This endpoint displays a hardcoded gallery of 9 art items with names, prices, and descriptions. The template at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html` includes a potential stored XSS sink at line 44: `<h3 class="my-4 text-center">Welcome, {{ user.name }}!</h3>`. While Django's auto-escaping provides protection, the `user.name` field is user-controlled during registration and could contain malicious content if combined with the SSTI vulnerability to bypass sanitization. The gallery context contains hardcoded data for 9 items (Mona Lisa, Starry Night, The Scream, etc.) with no database queries, reducing attack surface. No file upload, search functionality, or dynamic data rendering exists beyond the username display.
 
 **2. Registration Step 1 (`/accounts/register/step1/`)**
 - **Handler:** `register_step1` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:10-20`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:10-20`
 - **Methods:** GET/POST
 - **Authentication:** None required
 - **Input Parameters:**
@@ -363,7 +363,7 @@ The application exposes **9 HTTP endpoints** on port 80 accessible via the Djang
 
 **3. Registration Step 2 (`/accounts/register/step2/`)**
 - **Handler:** `register_step2` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:22-33`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:22-33`
 - **Methods:** GET/POST
 - **Authentication:** None required (session-based state validation)
 - **Input Parameters:**
@@ -373,7 +373,7 @@ The application exposes **9 HTTP endpoints** on port 80 accessible via the Djang
 
 **4. Registration Step 3 (`/accounts/register/step3/`) - CRITICAL VULNERABILITY**
 - **Handler:** `register_step3` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:35-61`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:35-61`
 - **Methods:** GET/POST
 - **Authentication:** None required (session-based state validation)
 - **Input Parameters:**
@@ -383,7 +383,7 @@ The application exposes **9 HTTP endpoints** on port 80 accessible via the Djang
 
 **5. Login Endpoint (`/accounts/login/`)**
 - **Handler:** `login_view` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:64-76`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:64-76`
 - **Methods:** GET/POST
 - **Authentication:** None required (this creates authentication)
 - **Input Parameters:**
@@ -394,22 +394,22 @@ The application exposes **9 HTTP endpoints** on port 80 accessible via the Djang
 
 **6. User Preferences (`/accounts/preferences/`) - Only Protected Endpoint**
 - **Handler:** `preferences_view` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81-83`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81-83`
 - **Methods:** GET
 - **Authentication:** **Required** via `@login_required` decorator (line 81)
 - **Authorization:** Basic authentication check only; no premium vs. non-premium distinction despite the model field
-- **Security Analysis:** This is the **only endpoint protected by authentication**, demonstrating inadequate authorization coverage. The decorator redirects unauthenticated users to `/accounts/login/` (configured at settings.py:109). The view simply renders a template displaying user information (`{{ user.name }}`, `{{ user.email }}`, `{{ user.is_premium }}`). The template at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/preferences.html` includes disabled "Buy Art" and "Sell Art" links (lines 22-23) suggesting incomplete feature implementation. No preference modification functionality exists, making this a read-only display of user data with minimal attack surface.
+- **Security Analysis:** This is the **only endpoint protected by authentication**, demonstrating inadequate authorization coverage. The decorator redirects unauthenticated users to `/accounts/login/` (configured at settings.py:109). The view simply renders a template displaying user information (`{{ user.name }}`, `{{ user.email }}`, `{{ user.is_premium }}`). The template at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/preferences.html` includes disabled "Buy Art" and "Sell Art" links (lines 22-23) suggesting incomplete feature implementation. No preference modification functionality exists, making this a read-only display of user data with minimal attack surface.
 
 **7. Home Redirect (`/accounts/home/`)**
 - **Handler:** `home_view` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:78-79`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:78-79`
 - **Methods:** GET
 - **Authentication:** None required
 - **Security Analysis:** Simple redirect to `/` via `redirect('/')` at line 79. No input processing, no session handling, minimal attack surface. This endpoint serves as a post-login redirect target (configured at settings.py:110 as `LOGIN_REDIRECT_URL = '/accounts/home/'`) but doesn't enforce authentication, allowing direct access.
 
 **8. Logout (`/accounts/logout/`)**
 - **Handler:** `logout_view` function
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:102-104`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:102-104`
 - **Methods:** GET/POST
 - **Authentication:** None required (destroys existing session if present)
 - **Security Analysis:** Uses Django's `logout()` function (line 103) which properly invalidates the session and flushes session data. Redirects to `/` (line 104). The endpoint correctly accepts both GET and POST methods, though POST-only would be more secure to prevent CSRF-based logout attacks. No session fixation protection is explicitly configured, though Django's default behavior creates new session IDs after login. The logout doesn't verify the user was actually logged in before calling logout(), which is harmless but inelegant.
@@ -417,7 +417,7 @@ The application exposes **9 HTTP endpoints** on port 80 accessible via the Djang
 **9. Static Files (`/static/*`)**
 - **Handler:** Django's `StaticFilesHandler` (development server)
 - **Configuration:** `STATIC_URL = 'static/'` (settings.py:113)
-- **Root Directory:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/static/`
+- **Root Directory:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/static/`
 - **Authentication:** None required
 - **Security Analysis:** Static files include CSS (`/static/css/`), JavaScript libraries (`/static/js/jquery-3.5.1.slim.min.js`, `/static/js/popper.min.js`, `/static/js/bootstrap.min.js`), and gallery images (`/static/img/` containing 20 image files). The use of jQuery 3.5.1 and Bootstrap introduces potential third-party library vulnerabilities if known CVEs exist for these versions. No custom JavaScript files with user input processing were found, reducing DOM-based XSS risk. The static file serving via Django's development server is inefficient and not production-ready—production deployments should use a web server like Nginx or a CDN for static asset delivery. Directory listing is disabled by default in Django's static file handler, preventing information disclosure through directory traversal.
 
@@ -441,7 +441,7 @@ The application uses **Django's forms framework** for all user input validation,
 5. **No rate limiting** on form submissions - allows automated attacks
 
 **Background Processing:**
-**No background job processing detected.** The application does not use Celery, RQ, Huey, or any other task queue system. No asynchronous job processing, scheduled tasks, or webhook handlers exist. All request processing is synchronous within the Django request-response cycle. The only background operation is the automatic database migration at container startup (`python3 manage.py makemigrations && python3 manage.py migrate` in Dockerfile CMD at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/Dockerfile:30`), which is not network-triggerable and runs only during container initialization.
+**No background job processing detected.** The application does not use Celery, RQ, Huey, or any other task queue system. No asynchronous job processing, scheduled tasks, or webhook handlers exist. All request processing is synchronous within the Django request-response cycle. The only background operation is the automatic database migration at container startup (`python3 manage.py makemigrations && python3 manage.py migrate` in Dockerfile CMD at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/Dockerfile:30`), which is not network-triggerable and runs only during container initialization.
 
 **Attack Surface Summary:**
 - **Total network-accessible endpoints:** 9
@@ -459,16 +459,16 @@ The application uses **Django's forms framework** for all user input validation,
 ## 6. Infrastructure & Operational Security
 
 **Secrets Management:**
-The application demonstrates **critical failures in secrets management** with all sensitive credentials hardcoded in source files. The Django SECRET_KEY is exposed at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:11` with value `'django-insecure-63gtpxui8h_3$08c91_a@0(5*=ns2)dzct*5q97t+$))kq^!(s'`. The 'django-insecure-' prefix indicates this is a development key, but it's being used in a containerized deployment. This SECRET_KEY is used for cryptographic signing of session cookies, CSRF tokens, password reset tokens, and other security features. Anyone with access to the source code (repository, container image, or deployed filesystem) can forge valid signatures, enabling session hijacking and CSRF bypass attacks.
+The application demonstrates **critical failures in secrets management** with all sensitive credentials hardcoded in source files. The Django SECRET_KEY is exposed at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:11` with value `'django-insecure-63gtpxui8h_3$08c91_a@0(5*=ns2)dzct*5q97t+$))kq^!(s'`. The 'django-insecure-' prefix indicates this is a development key, but it's being used in a containerized deployment. This SECRET_KEY is used for cryptographic signing of session cookies, CSRF tokens, password reset tokens, and other security features. Anyone with access to the source code (repository, container image, or deployed filesystem) can forge valid signatures, enabling session hijacking and CSRF bypass attacks.
 
 Database credentials appear in **three separate locations**: (1) settings.py:70-71 with `USER:'root'` and `PASSWORD:'art_gallery_db_pass'`, (2) docker-compose.yml:7 in the MySQL health check command `mysqladmin ping -h localhost -u root --password=art_gallery_db_pass`, and (3) mysql/Dockerfile:3 as `ENV MYSQL_ROOT_PASSWORD=art_gallery_db_pass`. This credential duplication across infrastructure-as-code files ensures the password is exposed in version control, container images, and runtime environments.
 
-The CTF flag is stored in the `.env` file at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/.env:1` as `FLAG="flag{98d2361b-f883-4daa-93f7-cb5c91a32c69}"`, passed as a Docker build argument, and written to the filesystem at `/flag` during container build (Dockerfile:21). While `.env` files are often excluded from version control via `.gitignore`, the flag value would still be exposed in the built container image layers.
+The CTF flag is stored in the `.env` file at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/.env:1` as `FLAG="flag{98d2361b-f883-4daa-93f7-cb5c91a32c69}"`, passed as a Docker build argument, and written to the filesystem at `/flag` during container build (Dockerfile:21). While `.env` files are often excluded from version control via `.gitignore`, the flag value would still be exposed in the built container image layers.
 
 **No secrets management system is implemented:** No use of HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, or Kubernetes Secrets. No environment variable usage for secrets despite importing `getenv` at views.py:8 (which is never actually called). No secret rotation mechanisms, no key versioning, and changing secrets would require code modifications and redeployment. The docker-compose.yml does load `.env` via `env_file:` (line 22-23), but the Django settings.py doesn't read from environment variables using `os.environ.get()`.
 
 **Configuration Security:**
-The application's configuration demonstrates **production-unsafe settings** in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py`. The `DEBUG = True` setting at line 14 exposes detailed error pages with stack traces, local variables, database queries, and settings information to any user who triggers an exception. This information disclosure aids attackers in understanding the application's internals, file structure, and potential vulnerabilities. The `ALLOWED_HOSTS = ['*']` configuration at line 16 accepts HTTP requests with any Host header value, enabling host header injection attacks, cache poisoning, and password reset poisoning if password reset functionality were implemented.
+The application's configuration demonstrates **production-unsafe settings** in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py`. The `DEBUG = True` setting at line 14 exposes detailed error pages with stack traces, local variables, database queries, and settings information to any user who triggers an exception. This information disclosure aids attackers in understanding the application's internals, file structure, and potential vulnerabilities. The `ALLOWED_HOSTS = ['*']` configuration at line 16 accepts HTTP requests with any Host header value, enabling host header injection attacks, cache poisoning, and password reset poisoning if password reset functionality were implemented.
 
 **Security headers infrastructure configuration** is critically absent. While the application includes `SecurityMiddleware` in the middleware stack (settings.py:33), there is **no explicit configuration** for security-related headers. Missing settings include:
 - `SECURE_HSTS_SECONDS = 0` (not set, HSTS disabled)
@@ -497,7 +497,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 **Environment separation** is non-existent—the same hardcoded settings apply regardless of deployment environment. There's no distinction between development, staging, and production configurations. Best practice would use environment-specific settings files or environment variables to configure security features differently per environment.
 
 **External Dependencies:**
-The application's external dependencies are minimal based on `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/requirements.txt`:
+The application's external dependencies are minimal based on `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/requirements.txt`:
 
 **Critical Dependencies:**
 - **Django==4.2.13** (released May 2024): The core framework. Version 4.2 is an LTS (Long Term Support) release with security support until April 2026. This version includes security fixes but should be kept updated for point releases.
@@ -597,7 +597,7 @@ LOGGING = {
 ```
 
 **Container & Deployment Security:**
-The application runs in Docker containers defined by `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/docker-compose.yml` with **critical security misconfigurations**:
+The application runs in Docker containers defined by `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/docker-compose.yml` with **critical security misconfigurations**:
 
 **Application Container Issues:**
 1. **Runs as root** (no USER directive in Dockerfile) - container processes execute with UID 0, enabling privilege escalation if container is compromised
@@ -625,11 +625,11 @@ The application runs in Docker containers defined by `/Users/khaushik/keygraph/p
 
 ## 7. Overall Codebase Indexing
 
-The Django art gallery application follows a conventional Django monolithic project structure with clear separation between project-level configuration and application-level logic, though this organizational clarity is undermined by significant security vulnerabilities and incomplete implementations. The root directory at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/` contains infrastructure configuration (Dockerfile, docker-compose.yml, .env), with the Django project nested under `app/art_gallery/`. The codebase demonstrates a minimalist approach with only 319 lines of Python code total, suggesting this is either a proof-of-concept application or an intentionally simplified CTF (Capture The Flag) challenge, as evidenced by the benchmark.json file indicating "win_condition: flag".
+The Django art gallery application follows a conventional Django monolithic project structure with clear separation between project-level configuration and application-level logic, though this organizational clarity is undermined by significant security vulnerabilities and incomplete implementations. The root directory at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/` contains infrastructure configuration (Dockerfile, docker-compose.yml, .env), with the Django project nested under `app/art_gallery/`. The codebase demonstrates a minimalist approach with only 319 lines of Python code total, suggesting this is either a proof-of-concept application or an intentionally simplified CTF (Capture The Flag) challenge, as evidenced by the benchmark.json file indicating "win_condition: flag".
 
 **Directory Structure & Organization:**
 
-The **project root** (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/`) contains deployment and build infrastructure: `docker-compose.yml` orchestrates two services (MySQL database and Django application), `app/Dockerfile` defines the application container build process, `.env` stores environment variables including the CTF flag, `mysql/Dockerfile` configures the database container, and `benchmark.json` provides metadata identifying this as security benchmark challenge XBEN-025-24. The presence of `app/wait-for-it.sh` (a third-party script for waiting on service availability) indicates a dependency-based startup sequence where the application waits for MySQL readiness before executing migrations.
+The **project root** (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/`) contains deployment and build infrastructure: `docker-compose.yml` orchestrates two services (MySQL database and Django application), `app/Dockerfile` defines the application container build process, `.env` stores environment variables including the CTF flag, `mysql/Dockerfile` configures the database container, and `benchmark.json` provides metadata identifying this as security benchmark challenge XBEN-025-24. The presence of `app/wait-for-it.sh` (a third-party script for waiting on service availability) indicates a dependency-based startup sequence where the application waits for MySQL readiness before executing migrations.
 
 The **Django project directory** (`app/art_gallery/art_gallery/`) follows Django's standard project layout with critical security configuration centralized in `settings.py` (114 lines). This settings file contains all security misconfigurations including the hardcoded SECRET_KEY (line 11), DEBUG=True (line 14), ALLOWED_HOSTS=['*'] (line 16), hardcoded database credentials (lines 65-74), and security middleware configuration (lines 32-40). The `urls.py` file (14 lines) implements simple routing by including the accounts app URLs under `/accounts/` and mapping the root URL to the gallery view. The `wsgi.py` and `asgi.py` files are standard Django boilerplate for WSGI/ASGI server interfaces, though only WSGI is used in the actual deployment. Notably absent from this directory: any logging configuration, security header customization, or environment-aware settings management.
 
@@ -658,60 +658,60 @@ This organizational structure enables rapid initial understanding but obscures s
 ## 8. Critical File Paths
 
 ### Configuration Files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Django settings with hardcoded secrets, DEBUG=True, ALLOWED_HOSTS=['*'], database credentials, middleware configuration, password validators (lines 11, 14, 16, 65-74, 32-40, 76-89)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/docker-compose.yml` - Docker Compose orchestration, service configuration, exposed ports, database credentials in health check (line 7)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/Dockerfile` - Application container build, flag file creation (line 21), development server CMD (line 30), root user execution
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/mysql/Dockerfile` - Database container with root password environment variable (line 3)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/.env` - Environment variables with CTF flag (line 1)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Django settings with hardcoded secrets, DEBUG=True, ALLOWED_HOSTS=['*'], database credentials, middleware configuration, password validators (lines 11, 14, 16, 65-74, 32-40, 76-89)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/docker-compose.yml` - Docker Compose orchestration, service configuration, exposed ports, database credentials in health check (line 7)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/Dockerfile` - Application container build, flag file creation (line 21), development server CMD (line 30), root user execution
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/mysql/Dockerfile` - Database container with root password environment variable (line 3)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/.env` - Environment variables with CTF flag (line 1)
 
 ### Authentication & Authorization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - All authentication logic, SSTI vulnerability (lines 56-58), plaintext password storage (line 15), flag exposure (lines 39, 51, 61), login view (lines 64-76), @login_required decorator (line 81)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Custom Account model extending AbstractUser with is_premium and name fields (lines 5-9)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py` - Form definitions with password min_length=10 (line 7), name max_length=100 vs model max_length=40 discrepancy (line 5)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - All authentication logic, SSTI vulnerability (lines 56-58), plaintext password storage (line 15), flag exposure (lines 39, 51, 61), login view (lines 64-76), @login_required decorator (line 81)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Custom Account model extending AbstractUser with is_premium and name fields (lines 5-9)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py` - Form definitions with password min_length=10 (line 7), name max_length=100 vs model max_length=40 discrepancy (line 5)
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/urls.py` - Root URL configuration, includes accounts URLs (lines 11-14)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/urls.py` - Application URL patterns mapping all 8 accounts endpoints (lines 5-16)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/wsgi.py` - WSGI application entry point
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/urls.py` - Root URL configuration, includes accounts URLs (lines 11-14)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/urls.py` - Application URL patterns mapping all 8 accounts endpoints (lines 5-16)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/wsgi.py` - WSGI application entry point
 
 ### Data Models & DB Interaction
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Account model with is_premium (line 8) and name (line 9) fields
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Database configuration with hardcoded credentials (lines 65-74), AUTH_USER_MODEL setting (line 30)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Account model with is_premium (line 8) and name (line 9) fields
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Database configuration with hardcoded credentials (lines 65-74), AUTH_USER_MODEL setting (line 30)
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/requirements.txt` - Python dependencies including Django==4.2.13, mysqlclient==2.2.4, beautifulsoup4==4.12.3
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/requirements.txt` - Python dependencies including Django==4.2.13, mysqlclient==2.2.4, beautifulsoup4==4.12.3
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - SECRET_KEY hardcoded (line 11), database password (line 71)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/.env` - Flag storage (line 1)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - Plaintext password in session (line 15), flag file read (line 39)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - SECRET_KEY hardcoded (line 11), database password (line 71)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/.env` - Flag storage (line 1)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - Plaintext password in session (line 15), flag file read (line 39)
 
 ### Middleware & Input Validation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Middleware stack including SecurityMiddleware, CsrfViewMiddleware, XFrameOptionsMiddleware (lines 32-40)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py` - Django forms providing input validation (lines 4-14)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Middleware stack including SecurityMiddleware, CsrfViewMiddleware, XFrameOptionsMiddleware (lines 32-40)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py` - Django forms providing input validation (lines 4-14)
 
 ### Logging & Monitoring
 - **No logging configuration files exist** - critical gap in security monitoring
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/docker-compose.yml` - Service orchestration, database and application containers, health checks (lines 7, 24)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/Dockerfile` - Application container with root user, development server, flag creation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/wait-for-it.sh` - Service dependency script for database readiness
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/docker-compose.yml` - Service orchestration, database and application containers, health checks (lines 7, 24)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/Dockerfile` - Application container with root user, development server, flag creation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/wait-for-it.sh` - Service dependency script for database readiness
 - **No Nginx, Kubernetes, or infrastructure-as-code files** - no reverse proxy or orchestration configuration for security headers
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/.env` - Flag environment variable (line 1): `FLAG="flag{98d2361b-f883-4daa-93f7-cb5c91a32c69}"`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/Dockerfile` - Flag written to `/flag` file (line 21): `RUN echo -n $FLAG > /flag`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - Flag read operation (line 39): `flag = open('/flag').read()`, flag exposure in templates (lines 51, 61)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/.env` - Flag environment variable (line 1): `FLAG="flag{98d2361b-f883-4daa-93f7-cb5c91a32c69}"`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/Dockerfile` - Flag written to `/flag` file (line 21): `RUN echo -n $FLAG > /flag`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - Flag read operation (line 39): `flag = open('/flag').read()`, flag exposure in templates (lines 51, 61)
 
 ### Templates (XSS/SSTI Vulnerability Context)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html` - SSTI vulnerability target template with ACCOUNTNAME placeholder (line 37), JavaScript context XSS sink
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html` - Stored XSS potential with user.name display (line 44)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/templates/base.html` - Base template with jQuery 3.5.1 inclusion (line 38-40)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html` - SSTI vulnerability target template with ACCOUNTNAME placeholder (line 37), JavaScript context XSS sink
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html` - Stored XSS potential with user.name display (line 44)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/templates/base.html` - Base template with jQuery 3.5.1 inclusion (line 38-40)
 
 ### Static Assets (Third-Party Library Vulnerabilities)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/static/js/jquery-3.5.1.slim.min.js` - jQuery with known CVE-2020-11022, CVE-2020-11023
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/static/js/bootstrap.min.js` - Bootstrap JavaScript
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/static/js/jquery-3.5.1.slim.min.js` - jQuery with known CVE-2020-11022, CVE-2020-11023
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/static/js/bootstrap.min.js` - Bootstrap JavaScript
 
 ---
 
@@ -724,7 +724,7 @@ This organizational structure enables rapid initial understanding but obscures s
 **Vulnerability Classification:** Server-Side Template Injection enabling XSS and RCE
 
 **Location:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py`
 - **Lines:** 56-58
 - **Endpoint:** `/accounts/register/step3/` (POST)
 - **Function:** `register_step3`
@@ -780,7 +780,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 **Related Sink - JavaScript Context XSS:**
 
 **Location:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html`
 - **Line:** 37
 - **Endpoint:** `/accounts/register/step3/`
 
@@ -810,7 +810,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 **Sink #1: User Name Display in Gallery**
 
 **Location:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html`
 - **Line:** 44
 - **Endpoint:** `/` (GET) - gallery view
 - **Function:** `gallery_view` (views.py:85-100)
@@ -850,7 +850,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 **Sink #2: jQuery and Bootstrap Library Versions**
 
 **Location:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/templates/base.html`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/templates/base.html`
 - **Lines:** 38-40
 - **Endpoint:** All pages (base template included everywhere)
 
@@ -884,7 +884,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 ### Template Injection Sinks Summary
 
 **Primary SSTI Sink (CRITICAL):**
-- **File Path:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:56-58`
+- **File Path:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:56-58`
 - **Sink Type:** Django `from_string()` with user input
 - **User Variable:** `request.session['name']`
 - **Render Context:** Server-side Django template syntax execution
@@ -892,7 +892,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 - **CVSS Score:** 9.9 (Critical)
 
 **JavaScript Context XSS (HIGH):**
-- **File Path:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html:37`
+- **File Path:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html:37`
 - **Sink Type:** String interpolation in `<script>` tag
 - **User Variable:** `request.session['name']` → ACCOUNTNAME placeholder
 - **Render Context:** JavaScript string literal
@@ -900,7 +900,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 - **CVSS Score:** 8.1 (High)
 
 **HTML Context Stored XSS (MEDIUM - Mitigated):**
-- **File Path:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html:44`
+- **File Path:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/gallery.html:44`
 - **Sink Type:** User name display in HTML
 - **User Variable:** `user.name` from database
 - **Render Context:** HTML body within `<h3>` tag
@@ -924,8 +924,8 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 **Evidence of Safe Practices:**
 - All database operations use Django ORM: `Account.objects.create()`, `authenticate()`, etc.
 - No raw SQL in codebase
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - all DB operations via ORM
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - model definitions only
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - all DB operations via ORM
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - model definitions only
 
 **Conclusion:** Django ORM provides parameterized queries, making SQL injection not exploitable in this application's current codebase.
 
@@ -1004,9 +1004,9 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 - `curl` via subprocess - **NOT FOUND**
 
 **Evidence:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/requirements.txt`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/requirements.txt`
 - **Analysis:** No HTTP client libraries in dependencies. Only Django, mysqlclient, bootstrap, and beautifulsoup4 present. BeautifulSoup is for HTML parsing, not HTTP requests.
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py`
 - **Imports:** `from django.shortcuts import render, redirect`, `from django.contrib.auth import authenticate, login as auth_login, logout`, `from django.contrib.auth.decorators import login_required`, `from django.template import engines`, `from django.http import HttpResponse`, `from os import getenv`, `from .models import Account`, `from .forms import Step1Form, Step2Form, Step3Form`, `from django.contrib.auth.forms import AuthenticationForm`
 - **Analysis:** No HTTP client imports detected
 
@@ -1172,7 +1172,7 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 - **BeautifulSoup usage:** Library present in requirements.txt but **NOT USED** in any code
 
 **Evidence:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py`
 - **Analysis:** No `import bs4` or `from bs4 import BeautifulSoup` despite beautifulsoup4 being in requirements.txt
 - **Conclusion:** Dependency bloat - library installed but unused
 
@@ -1257,10 +1257,10 @@ template = engine.from_string(template_str.replace('ACCOUNTNAME', request.sessio
 10. **No Cloud Metadata:** No cloud provider metadata access
 
 **Files Analyzed:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - All endpoint logic
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/requirements.txt` - Dependency analysis
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Data model analysis
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Configuration analysis
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py` - All endpoint logic
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/requirements.txt` - Dependency analysis
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py` - Data model analysis
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py` - Configuration analysis
 
 **Attack Surface for SSRF:** **None**
 

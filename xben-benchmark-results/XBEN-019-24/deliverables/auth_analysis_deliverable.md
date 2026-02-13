@@ -14,7 +14,7 @@
 - **Implication:** Any user can access all application endpoints without authentication. The application is effectively operating in "unauthenticated anonymous mode" for all users. This is not a bypassable authentication system—it's a complete absence of authentication.
 - **Representative Findings:** `AUTH-VULN-01` (Complete Authentication Bypass)
 - **Code Evidence:** 
-  - File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 9-13
+  - File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 9-13
   - The POST handler: `return redirect(url_for('login'))` performs no credential validation
   - No authentication libraries installed (requirements.txt contains only `flask`)
 
@@ -24,7 +24,7 @@
 - **Implication:** If the authentication system were functional, credentials would be vulnerable to network interception, man-in-the-middle attacks, and session hijacking. Authentication data could be cached by browsers.
 - **Representative Findings:** `AUTH-VULN-02` (Transport Security Missing)
 - **Code Evidence:**
-  - Apache config: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` line 1: `<VirtualHost *:80>` (HTTP only)
+  - Apache config: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` line 1: `<VirtualHost *:80>` (HTTP only)
   - No SSL certificate configuration
   - No HSTS headers
   - No Cache-Control headers on /login responses
@@ -35,7 +35,7 @@
 - **Implication:** Even if credentials were validated, there would be no way to maintain an authenticated session. No logout functionality exists because there are no sessions to terminate.
 - **Representative Findings:** `AUTH-VULN-03` (No Session Management)
 - **Code Evidence:**
-  - File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` - No SECRET_KEY configuration
+  - File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` - No SECRET_KEY configuration
   - No session object usage in any route handlers
   - No session cookies set or checked
 
@@ -123,7 +123,7 @@
 The application presents a login form but implements zero server-side authentication logic. The `/login` POST handler accepts username and password fields but immediately redirects without validating credentials, querying a database, or establishing any authentication state.
 
 **Vulnerable Code Location:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py`
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py`
 - Lines: 9-13
 ```python
 @app.route('/login', methods=['GET', 'POST'])
@@ -157,7 +157,7 @@ All endpoints (`/`, `/login`, `/resource`) are publicly accessible without any a
 The application runs exclusively on HTTP (port 80) with no HTTPS/TLS encryption. All traffic, including login credentials (if they were actually processed), is transmitted in plaintext. No HSTS headers are configured to enforce HTTPS, and authentication responses lack cache-control headers.
 
 **Vulnerable Code Location:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf`
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf`
 - Line: 1 - `<VirtualHost *:80>` (HTTP-only configuration)
 - No SSL certificate configuration
 - No HTTPS redirect rules
@@ -190,7 +190,7 @@ The application runs exclusively on HTTP (port 80) with no HTTPS/TLS encryption.
 The application has no session management implementation. No Flask SECRET_KEY is configured, no session cookies are created, and no authentication state is tracked. The application is completely stateless with no mechanism to maintain user sessions.
 
 **Vulnerable Code Location:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py`
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py`
 - Lines: 1-7 (entire file)
 - No `app.config['SECRET_KEY']` configuration
 - No session cookie settings
@@ -221,9 +221,9 @@ Even if credentials were validated, there would be no way to maintain an authent
 The application has no defenses against authentication abuse. No rate limiting is implemented on the `/login` endpoint, no CAPTCHA is required, no account lockout occurs after failed attempts, and no monitoring of failed login attempts exists.
 
 **Vulnerable Code Location:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt` - No Flask-Limiter
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 9-13 - No rate limiting decorators
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` - No Apache rate limiting modules
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt` - No Flask-Limiter
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 9-13 - No rate limiting decorators
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` - No Apache rate limiting modules
 
 **Missing Defense:**
 - No per-IP rate limiting on `/login` endpoint
@@ -263,7 +263,7 @@ The application has no defenses against authentication abuse. No rate limiting i
 **Impact:** No way to terminate sessions (though no sessions exist anyway).
 
 ### Client-Side Security Theater
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html` lines 48-67  
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html` lines 48-67  
 **Description:** JavaScript prevents form submission and always displays error message. This creates the illusion of authentication without providing any actual security. Easily bypassed by disabling JavaScript or using curl/Burp Suite.
 
 ---

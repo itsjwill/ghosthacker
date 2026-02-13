@@ -112,7 +112,7 @@ The application contains zero authentication endpoints:
 
 The application uses `request.remote_addr` IP address checking as a binary access control mechanism:
 
-**Implementation:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:47, 53`
+**Implementation:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:47, 53`
 
 ```python
 # Admin interface protection
@@ -138,7 +138,7 @@ def admin_flag():
 
 ### Code Pointers
 
-**Session Configuration:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:8`
+**Session Configuration:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:8`
 ```python
 app.secret_key = 'supersecretkey'
 ```
@@ -212,7 +212,7 @@ flash(f'Error fetching the URL: {e}')
 
 | Method | Endpoint Path | Required Role | Object ID Parameters | Authorization Mechanism | Description & Code Pointer |
 |--------|---------------|---------------|----------------------|-------------------------|----------------------------|
-| GET | `/` | anon | None | None | Main landing page serving markdown converter form. See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:12-14` |
+| GET | `/` | anon | None | None | Main landing page serving markdown converter form. See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:12-14` |
 | POST | `/convert` | anon | None | None | **CRITICAL SSRF & XSS SINK** - Processes markdown from URL or text. Accepts `url` (SSRF vector) and `markdown_text` (XSS vector) parameters. See `app.py:16-43` |
 | GET | `/admin` | localhost | None | IP check: `request.remote_addr == '127.0.0.1'` | Admin interface with links to flag endpoint. Returns 403 Forbidden for non-localhost. Bypassable via SSRF. See `app.py:45-49` |
 | GET | `/admin/flag` | localhost | None | IP check: `request.remote_addr == '127.0.0.1'` | **HIGH-VALUE TARGET** - Discloses CTF flag. Returns 403 for non-localhost. Bypassable via SSRF to `http://127.0.0.1/admin/flag`. See `app.py:51-55` |
@@ -243,7 +243,7 @@ flash(f'Error fetching the URL: {e}')
 
 **Critical Input Vector #1: `url` parameter**
 - **Endpoint:** `POST /convert`
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:18`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:18`
 - **Code:** `url = request.form.get('url')`
 - **Validation:** Only null check (line 21) - NO URL validation
 - **Sink:** `urllib.request.urlopen(url)` at line 27
@@ -256,11 +256,11 @@ flash(f'Error fetching the URL: {e}')
 
 **Critical Input Vector #2: `markdown_text` parameter**
 - **Endpoint:** `POST /convert`
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:19`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:19`
 - **Code:** `markdown_text = request.form.get('markdown_text')`
 - **Validation:** Only null check (line 21) - NO content sanitization
 - **Processing:** `markdown.markdown(content)` at line 35 (preserves raw HTML)
-- **Sink:** `{{ html_content|safe }}` in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html:33`
+- **Sink:** `{{ html_content|safe }}` in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html:33`
 - **Vulnerability:** XSS (CVSS 7.3)
 - **Attack Vectors:**
   - Script injection: `<script>alert(document.cookie)</script>`
@@ -326,7 +326,7 @@ flash(f'Error fetching the URL: {e}')
 | LocalhostAdmin | IP: `127.0.0.1`; Access: All endpoints including `/admin/flag`; Bypass: SSRF via `/convert?url=http://127.0.0.1/admin/flag`; Audit: None |
 | FlagStore | Storage: In-memory Python variable; Value: `flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}`; Exposure: Git history (.env file committed), Docker image layers, SSRF-accessible endpoint `/admin/flag` |
 | SessionStore | Type: Flask SecureCookieSession; Signing: HMAC with secret `'supersecretkey'`; Encryption: None (base64 only); Security Flags: HttpOnly=true, Secure=false, SameSite=None |
-| StaticFiles | Path: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/static/`; Files: `style.css` (69 lines); Exposure: Public; Vulnerabilities: None |
+| StaticFiles | Path: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/static/`; Files: `style.css` (69 lines); Exposure: Public; Vulnerabilities: None |
 
 ### 6.3 Flows (Connections)
 
@@ -558,13 +558,13 @@ While command/SQL injection are absent, the following injection vulnerabilities 
 - **Source:** `request.form.get('url')` at app.py:18
 - **Sink:** `urllib.request.urlopen(url)` at app.py:27
 - **Data Flow:** User input → url variable → network request execution
-- **File:Line:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:18 → 27`
+- **File:Line:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:18 → 27`
 
 **XSS Injection (HIGH):**
 - **Source:** `request.form.get('markdown_text')` at app.py:19
 - **Sink:** `{{ html_content|safe }}` in converter.html:33
 - **Data Flow:** User input → markdown.markdown() → template rendering without escaping
-- **File:Line:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:19 → 35`, template at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html:33`
+- **File:Line:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:19 → 35`, template at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html:33`
 
 ### Vulnerability Sources by Type
 
@@ -573,10 +573,10 @@ While command/SQL injection are absent, the following injection vulnerabilities 
 **SQL Injection Sources:** None
 
 **SSRF Injection Sources:** 1
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:18` (`url` parameter) → Line 27 (`urllib.request.urlopen()`)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:18` (`url` parameter) → Line 27 (`urllib.request.urlopen()`)
 
 **XSS Injection Sources:** 1
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:19` (`markdown_text` parameter) → Line 35 (`markdown.markdown()`) → `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html:33` (`|safe` filter)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:19` (`markdown_text` parameter) → Line 35 (`markdown.markdown()`) → `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html:33` (`|safe` filter)
 
 ### Summary for Injection Analysis Specialist
 

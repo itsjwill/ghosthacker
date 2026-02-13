@@ -370,7 +370,7 @@ OUTPUT:   Static HTML + Apache access/error logs
 The CTF flag (`flag{522200b1-5603-4ffd-bbdd-0b6a1db6cb2c}`) is stored in **four separate locations**, each representing a distinct attack vector:
 
 **Location 1: Git Repository (.env file)**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` (line 1)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` (line 1)
 - **Content:** `FLAG="flag{522200b1-5603-4ffd-bbdd-0b6a1db6cb2c}"`
 - **CRITICAL VULNERABILITY:** Committed to version control
 - **Attack Vector:** Read git repository (requires repository access, not network-accessible)
@@ -743,10 +743,10 @@ The file naming conventions follow Docker and Apache standards (lowercase, descr
 All file paths below are specific locations referenced in this security analysis, categorized by security relevance for manual review:
 
 ### Configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf` - Apache server configuration (570 lines, contains all security directives)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/docker-compose.yml` - Docker orchestration configuration (15 lines, port mapping and healthcheck)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` - Environment variables (1 line, CRITICAL: contains plaintext flag)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/benchmark.json` - CTF challenge metadata (win condition and difficulty)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf` - Apache server configuration (570 lines, contains all security directives)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/docker-compose.yml` - Docker orchestration configuration (15 lines, port mapping and healthcheck)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` - Environment variables (1 line, CRITICAL: contains plaintext flag)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/benchmark.json` - CTF challenge metadata (win condition and difficulty)
 
 ### Authentication & Authorization
 - **NONE** - No authentication or authorization code files exist
@@ -761,25 +761,25 @@ All file paths below are specific locations referenced in this security analysis
 - **NONE** - No package managers or dependency files (uses Docker base image only)
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` - Plaintext flag storage (CRITICAL)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (line 15) - Flag written to `/tmp/flag`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (line 17) - Flag set as environment variable
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` - Plaintext flag storage (CRITICAL)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (line 15) - Flag written to `/tmp/flag`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (line 17) - Flag set as environment variable
 
 ### Middleware & Input Validation
 - **NONE** - No middleware or input validation code exists
 
 ### Logging & Monitoring
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf` (lines 255, 263, 445-447) - Log configuration directives
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf` (lines 255, 263, 445-447) - Log configuration directives
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` - Container build instructions (18 lines, CRITICAL: specifies vulnerable Apache 2.4.49)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/docker-compose.yml` - Service deployment configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/Makefile` - Build automation (wraps docker-compose commands)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` - Container build instructions (18 lines, CRITICAL: specifies vulnerable Apache 2.4.49)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/docker-compose.yml` - Service deployment configuration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/Makefile` - Build automation (wraps docker-compose commands)
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` (line 1) - Flag in version control (CRITICAL)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (line 15) - `RUN echo $FLAG > /tmp/flag` (creates target file)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (line 17) - `ENV FLAG="..."` (environment variable)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` (line 1) - Flag in version control (CRITICAL)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (line 15) - `RUN echo $FLAG > /tmp/flag` (creates target file)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (line 17) - `ENV FLAG="..."` (environment variable)
 - `/tmp/flag` (runtime container path) - Primary exploitation target via CVE-2021-41773
 
 ### Runtime Paths (In Container)
@@ -1084,7 +1084,7 @@ Searched for cloud metadata access:
 
 **CRITICAL FINDING: All mod_proxy modules are DISABLED**
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf` (lines 143-155)
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf` (lines 143-155)
 
 ```apache
 #LoadModule proxy_module modules/mod_proxy.so
@@ -1125,7 +1125,7 @@ Found 4 default CGI scripts:
 
 ### Only Network Request Found: Healthcheck (Out of Scope)
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/docker-compose.yml` (line 12)
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/docker-compose.yml` (line 12)
 
 ```yaml
 healthcheck:

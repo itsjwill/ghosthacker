@@ -20,7 +20,7 @@
 
 **Description:** The application's sole authentication mechanism is IP address validation (`request.remote_addr == '127.0.0.1'`) on admin endpoints. This is fundamentally flawed and bypassable via multiple vectors including SSRF (which exists in the `/convert` endpoint), HTTP header manipulation, and proxy misconfigurations.
 
-**Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:47, 53`
+**Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:47, 53`
 
 ```python
 @app.route('/admin')
@@ -44,7 +44,7 @@ def admin_flag():
 
 **Description:** The application uses Flask's default client-side signed cookie sessions with a hardcoded, weak secret key (`'supersecretkey'`). Session cookies lack proper security flags (no Secure flag despite HTTP-only operation, no SameSite attribute), have no expiration policy, cannot be server-side invalidated, and are not rotated after privilege changes.
 
-**Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:8`
+**Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:8`
 
 ```python
 app.secret_key = 'supersecretkey'
@@ -66,7 +66,7 @@ app.secret_key = 'supersecretkey'
 
 **Description:** The application runs exclusively on HTTP (port 80) with no HTTPS enforcement, no HSTS headers, and no Secure flag on session cookies. Authentication-related responses lack cache control headers to prevent credential/session exposure in browser caches or proxies.
 
-**Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:58`
+**Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:58`
 
 ```python
 app.run(debug=False, host='0.0.0.0', port=80)

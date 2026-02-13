@@ -147,7 +147,7 @@ There is no:
 - Biometric authentication
 
 ### Code Pointers
-**Primary Configuration File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf`
+**Primary Configuration File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf`
 
 **Authentication Configuration Search Results:**
 - No `AuthType` directives (no authentication method specified)
@@ -177,7 +177,7 @@ There is no:
 **Cache/Session Persistence:** NOT APPLICABLE - No session management
 
 **Code Pointers:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf`
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf`
 - Line 251: `Require all granted` (Root directory)
 - Line 292: `Require all granted` (Document root)
 - Line 402: `Require all granted` (CGI directory)
@@ -554,7 +554,7 @@ HTTP Request → Apache 2.4.49 → Static File Handler → Static HTML Response
 **CRITICAL:** Flag value exposed in multiple locations:
 
 1. **Git Repository (.env file):**
-   - File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` (line 1)
+   - File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` (line 1)
    - Content: `FLAG="flag{522200b1-5603-4ffd-bbdd-0b6a1db6cb2c}"`
    - Risk: Permanently embedded in git history
 
@@ -574,7 +574,7 @@ HTTP Request → Apache 2.4.49 → Static File Handler → Static HTML Response
 
 ### Configuration Security Issues
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf`
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf`
 
 **Critical Misconfigurations:**
 - Line 251: `Require all granted` on root directory `/` - Allows universal access
@@ -639,10 +639,10 @@ HTTP Request → Apache 2.4.49 → Static File Handler → Static HTML Response
 ## 11. Summary of Critical File Paths
 
 ### Configuration Files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf` - Main Apache configuration (552 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/docker-compose.yml` - Docker orchestration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` - Environment variables (CONTAINS FLAG)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` - Container build instructions
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf` - Main Apache configuration (552 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/docker-compose.yml` - Docker orchestration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` - Environment variables (CONTAINS FLAG)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` - Container build instructions
 
 ### Runtime Paths (In Container)
 - `/usr/local/apache2/htdocs/index.html` - Static HTML content
@@ -652,9 +652,9 @@ HTTP Request → Apache 2.4.49 → Static File Handler → Static HTML Response
 - `/proc/self/environ` - Process environment variables (contains flag)
 
 ### Secrets Locations
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` (line 1) - Flag in git repository
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (line 15) - Creates `/tmp/flag`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (line 17) - Flag as ENV variable
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` (line 1) - Flag in git repository
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (line 15) - Creates `/tmp/flag`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (line 17) - Flag as ENV variable
 - `/tmp/flag` (runtime) - Primary exploitation target
 
 ## 12. Exploitation Summary

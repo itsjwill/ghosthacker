@@ -989,25 +989,25 @@ This clear, conventional structure significantly aids penetration testing and vu
 
 ## 8. Critical File Paths
 
-All file paths are listed with absolute paths from the repository root: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/`
+All file paths are listed with absolute paths from the repository root: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/`
 
 ### Configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/docker-compose.yml` - Service orchestration, health checks, database password
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/.env` - CTF flag storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/Dockerfile` - Application container build, flag file creation (lines 20-21)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/mysql/Dockerfile` - Database container build, root password
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/ssti_include_loan_calculator-httpd.conf` - Apache configuration, CORS wildcard (line 11), directory indexing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/ssti_include_loan_calculator.wsgi` - WSGI application entry point
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/Makefile` - Build automation commands
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/benchmark.json` - Challenge metadata, win condition
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/docker-compose.yml` - Service orchestration, health checks, database password
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/.env` - CTF flag storage
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/Dockerfile` - Application container build, flag file creation (lines 20-21)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/mysql/Dockerfile` - Database container build, root password
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/ssti_include_loan_calculator-httpd.conf` - Apache configuration, CORS wildcard (line 11), directory indexing
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/ssti_include_loan_calculator.wsgi` - WSGI application entry point
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/Makefile` - Build automation commands
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/benchmark.json` - Challenge metadata, win condition
 
 ### Authentication & Authorization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/__init__.py` - Flask app initialization, weak secret key (line 8), database credentials (line 11), default user creation (lines 19-35)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py` - All authentication endpoints: login (lines 24-38), logout (lines 41-45), session validation pattern (lines 51, 63, 87, 139, 152)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/models.py` - User model with plaintext password field (line 8)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/__init__.py` - Flask app initialization, weak secret key (line 8), database credentials (line 11), default user creation (lines 19-35)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py` - All authentication endpoints: login (lines 24-38), logout (lines 41-45), session validation pattern (lines 51, 63, 87, 139, 152)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/models.py` - User model with plaintext password field (line 8)
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py` - All 10 HTTP endpoints (lines 19-172)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py` - All 10 HTTP endpoints (lines 19-172)
   - Root redirect (19-21)
   - Login (24-38)
   - Logout (41-45)
@@ -1020,51 +1020,51 @@ All file paths are listed with absolute paths from the repository root: `/Users/
   - After-request cache headers (9-15, buggy implementation)
 
 ### Data Models & DB Interaction
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/models.py` - User model definition (lines 5-15), plaintext password storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/db.py` - SQLAlchemy database instance
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/__init__.py` - Database configuration (line 11), database initialization
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/models.py` - User model definition (lines 5-15), plaintext password storage
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/db.py` - SQLAlchemy database instance
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/__init__.py` - Database configuration (line 11), database initialization
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/requirements.txt` - Python package dependencies (Flask 3.0.3, Flask-SQLAlchemy 3.1.1, PyMySQL 1.1.0)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/requirements.txt` - Python package dependencies (Flask 3.0.3, Flask-SQLAlchemy 3.1.1, PyMySQL 1.1.0)
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/__init__.py` - Hardcoded session secret (line 8), database credentials (line 11)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/.env` - CTF flag in plaintext (line 1)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/Dockerfile` - Flag written to `/flag` file (lines 20-21)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/mysql/Dockerfile` - Database root password (line 6)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/__init__.py` - Hardcoded session secret (line 8), database credentials (line 11)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/.env` - CTF flag in plaintext (line 1)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/Dockerfile` - Flag written to `/flag` file (lines 20-21)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/mysql/Dockerfile` - Database root password (line 6)
 
 ### Middleware & Input Validation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py` - After-request middleware (lines 9-15, buggy implementation)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py` - Path traversal validation in file upload (lines 106-109)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py` - Path traversal validation in template inclusion (lines 127-131)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py` - After-request middleware (lines 9-15, buggy implementation)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py` - Path traversal validation in file upload (lines 106-109)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py` - Path traversal validation in template inclusion (lines 127-131)
 
 ### Logging & Monitoring
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/ssti_include_loan_calculator-httpd.conf` - Apache access and error log configuration (lines 3-4)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/ssti_include_loan_calculator-httpd.conf` - Apache access and error log configuration (lines 3-4)
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/docker-compose.yml` - Two-tier service architecture, health checks (lines 8-11, 24-27)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/Dockerfile` - Application container image build
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/mysql/Dockerfile` - Database container image build
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/ssti_include_loan_calculator-httpd.conf` - Apache VirtualHost configuration, CORS wildcard (line 11), directory indexing (lines 15, 22)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/docker-compose.yml` - Two-tier service architecture, health checks (lines 8-11, 24-27)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/Dockerfile` - Application container image build
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/mysql/Dockerfile` - Database container image build
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/ssti_include_loan_calculator-httpd.conf` - Apache VirtualHost configuration, CORS wildcard (line 11), directory indexing (lines 15, 22)
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/.env` - Flag definition (line 1: `FLAG="flag{61136ced-0d3f-41f6-893f-a0a8a02da41b}"`)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/Dockerfile` - Flag written to `/flag` in container (lines 20-21: `ARG FLAG` and `RUN echo -n $FLAG > /flag`)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/.env` - Flag definition (line 1: `FLAG="flag{61136ced-0d3f-41f6-893f-a0a8a02da41b}"`)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/Dockerfile` - Flag written to `/flag` in container (lines 20-21: `ARG FLAG` and `RUN echo -n $FLAG > /flag`)
 - **Runtime Flag Location:** `/flag` in the loan_calculator container filesystem
 
 ### Templates (HTML/Jinja2)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/login.html` - Login form (lines 19-24)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/home.html` - User dashboard
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/profile.html` - Profile view with form inputs (lines 18, 22, 26, 30, 34, 38, 48), profile image display (line 71)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/error.html` - **CRITICAL: Template inclusion vulnerability (line 27: `{% include error_type %}`)**, XSS sink (line 30)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/loan_details.html` - JavaScript context injection (lines 53-55), AJAX call to SSTI endpoint (lines 58-82)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/not_implemented.html` - Not implemented feature template (line 3)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/login.html` - Login form (lines 19-24)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/home.html` - User dashboard
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/profile.html` - Profile view with form inputs (lines 18, 22, 26, 30, 34, 38, 48), profile image display (line 71)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/error.html` - **CRITICAL: Template inclusion vulnerability (line 27: `{% include error_type %}`)**, XSS sink (line 30)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/loan_details.html` - JavaScript context injection (lines 53-55), AJAX call to SSTI endpoint (lines 58-82)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/not_implemented.html` - Not implemented feature template (line 3)
 
 ### Static Assets (Client-Side JavaScript/CSS)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/js/jquery.min.js` - jQuery 3.6.0
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/js/bootstrap.bundle.min.js` - Bootstrap 5.3.0-alpha1
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/css/bootstrap.min.css` - Bootstrap CSS
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/css/style.css` - Custom styles
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/js/jquery.min.js` - jQuery 3.6.0
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/js/bootstrap.bundle.min.js` - Bootstrap 5.3.0-alpha1
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/css/bootstrap.min.css` - Bootstrap CSS
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/css/style.css` - Custom styles
 
 ---
 
@@ -1080,7 +1080,7 @@ All XSS sink findings include exact file paths and line numbers for precise loca
 **Scope:** IN-SCOPE (Network-accessible authenticated endpoint)
 
 **Location:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py`
 - **Lines:** 163-168 (vulnerability at line 168)
 - **Route:** `GET /total_loan_payments`
 - **Authentication:** Required (session-based)
@@ -1149,9 +1149,9 @@ GET /total_loan_payments?principal={{config.__class__.__init__.__globals__['os']
 **Scope:** IN-SCOPE (Network-accessible public endpoint)
 
 **Location:**
-- **Backend File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py`
+- **Backend File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py`
 - **Backend Lines:** 122-133
-- **Template File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/error.html`
+- **Template File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/error.html`
 - **Template Line:** 27 (`{% include error_type %}`)
 - **Route:** `GET /error`
 - **Authentication:** None (PUBLIC)
@@ -1225,9 +1225,9 @@ Response: 400 Bad Request - "Trying to load a template located ouside the static
 **Scope:** IN-SCOPE (Network-accessible authenticated page)
 
 **Location:**
-- **Template File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/loan_details.html`
+- **Template File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/loan_details.html`
 - **Template Lines:** 53-55
-- **Backend File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py`
+- **Backend File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py`
 - **Backend Lines:** 136-146 (data source), 71-73 (profile update)
 - **Route:** `GET /loan_details`
 - **Authentication:** Required
@@ -1295,9 +1295,9 @@ var loanAmount = 1000; alert(document.cookie); //
 **Scope:** IN-SCOPE (Network-accessible authenticated page)
 
 **Location:**
-- **Template File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/profile.html`
+- **Template File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/profile.html`
 - **Template Lines:** 18, 22, 26, 30, 34, 38, 48, 71
-- **Backend File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py`
+- **Backend File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py`
 - **Backend Lines:** 68-73 (profile update)
 - **Route:** `GET /profile`
 - **Authentication:** Required
@@ -1368,9 +1368,9 @@ db.session.commit()
 **Scope:** IN-SCOPE (Network-accessible public endpoint)
 
 **Location:**
-- **Template File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/error.html`
+- **Template File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/error.html`
 - **Template Line:** 30
-- **Backend File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/routes.py`
+- **Backend File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/routes.py`
 - **Backend Line:** 124
 - **Route:** `GET /error`
 - **Authentication:** None (PUBLIC)
@@ -1414,9 +1414,9 @@ GET /error?message=<script>alert(document.cookie)</script>
 ### No XSS Sinks Found in These Categories
 
 **Safe jQuery Usage:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/loan_details.html`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/loan_details.html`
 - **Line 74:** `$('#loanPaymentMessage').text(...)` - Uses `.text()` method (safe, does not interpret HTML)
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-022-24/app/website/app/static/templates/profile.html`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-022-24/app/website/app/static/templates/profile.html`
 - **Line 91:** `$('#text_input_id').val(...)` - Uses `.val()` method (safe, sets value attribute)
 
 **No Dangerous Client-Side Sinks Found:**

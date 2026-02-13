@@ -180,7 +180,7 @@ The application architecture is a containerized Python Flask monolith (Python 3.
 
 ### Framework & Language
 
-The application is built on **Flask 3.0.3**, a lightweight Python web framework, running on **Python 3.8** within a containerized environment. The base Docker image is `python:3.8-slim`, which presents immediate security concerns as Python 3.8 reached end-of-life in October 2024 and no longer receives security updates. The application consists of a single 59-line Python file (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`) serving all endpoints, with three Jinja2 HTML templates for presentation and one CSS stylesheet for styling.
+The application is built on **Flask 3.0.3**, a lightweight Python web framework, running on **Python 3.8** within a containerized environment. The base Docker image is `python:3.8-slim`, which presents immediate security concerns as Python 3.8 reached end-of-life in October 2024 and no longer receives security updates. The application consists of a single 59-line Python file (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`) serving all endpoints, with three Jinja2 HTML templates for presentation and one CSS stylesheet for styling.
 
 The dependency footprint is minimal, containing only three packages in `requirements.txt`: Flask 3.0.3 (web framework), beautifulsoup4 4.9.3 (HTML parsing, installed but unused in the codebase), and markdown 3.3.6 (Markdown-to-HTML conversion). Notably absent are any security-focused libraries such as Flask-WTF (CSRF protection), Flask-CORS (Cross-Origin Resource Sharing), Flask-Limiter (rate limiting), Flask-Talisman (security headers), or authentication frameworks like Flask-Login or Flask-JWT. This absence of security dependencies indicates that the application implements no defense-in-depth security controls beyond basic Flask defaults.
 
@@ -225,9 +225,9 @@ This application contains zero authentication infrastructure. A comprehensive an
 - **No Password Reset:** No credential recovery mechanism
 - **No Token Refresh:** No JWT or OAuth token renewal capability
 
-The absence of these endpoints is confirmed by examining all route definitions in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, which contains only four routes: `GET /` (line 12-14), `POST /convert` (line 16-43), `GET /admin` (line 45-49), and `GET /admin/flag` (line 51-55). None of these routes implement authentication logic beyond IP address validation.
+The absence of these endpoints is confirmed by examining all route definitions in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, which contains only four routes: `GET /` (line 12-14), `POST /convert` (line 16-43), `GET /admin` (line 45-49), and `GET /admin/flag` (line 51-55). None of these routes implement authentication logic beyond IP address validation.
 
-**Missing Authentication Libraries:** The application's `requirements.txt` file (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/requirements.txt`) contains no authentication or security frameworks:
+**Missing Authentication Libraries:** The application's `requirements.txt` file (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/requirements.txt`) contains no authentication or security frameworks:
 - No bcrypt, argon2-cffi, or passlib for password hashing
 - No Flask-Login for session-based authentication
 - No Flask-JWT-Extended for JWT token management  
@@ -244,7 +244,7 @@ The absence of these endpoints is confirmed by examining all route definitions i
 
 The application implements a rudimentary access control mechanism based solely on IP address validation, which functions as a pseudo-authentication layer but fails to provide actual security:
 
-**Implementation Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`
+**Implementation Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`
 
 **Admin Interface Protection (Lines 45-49):**
 ```python
@@ -271,7 +271,7 @@ This mechanism checks if `request.remote_addr` equals `'127.0.0.1'` and returns 
 **Session Storage Mechanism:** Flask's default client-side signed cookie sessions using the `itsdangerous` library.
 
 **Critical Vulnerability - Hardcoded Secret Key:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`
 - **Line:** 8
 - **Code:** `app.secret_key = 'supersecretkey'`
 
@@ -296,7 +296,7 @@ Missing critical configurations:
 - **`SESSION_COOKIE_SAMESITE`:** Not set (defaults to `None`, **enables CSRF attacks**)
 - **`PERMANENT_SESSION_LIFETIME`:** Not set (sessions never expire)
 
-**Location of Missing Configuration:** None of these settings appear in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`. The file contains no `app.config[]` statements for session security.
+**Location of Missing Configuration:** None of these settings appear in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`. The file contains no `app.config[]` statements for session security.
 
 The absence of `SESSION_COOKIE_SECURE=True` combined with HTTP-only operation (port 80, no HTTPS) means session cookies are transmitted in plaintext over the network, exposing them to interception via man-in-the-middle attacks or network sniffing. The absence of `SESSION_COOKIE_SAMESITE` (defaulting to `None`) means session cookies are sent with cross-site requests, enabling Cross-Site Request Forgery attacks against the `/convert` endpoint.
 
@@ -383,16 +383,16 @@ This attack chain requires no authentication, no special privileges, no user int
 
 This Flask application operates without any database, ORM, or persistent data storage mechanism. Comprehensive analysis confirms:
 
-**No Database Libraries:** The `requirements.txt` file (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/requirements.txt`) contains only three dependencies: Flask 3.0.3, beautifulsoup4 4.9.3, and markdown 3.3.6. Notably absent are:
+**No Database Libraries:** The `requirements.txt` file (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/requirements.txt`) contains only three dependencies: Flask 3.0.3, beautifulsoup4 4.9.3, and markdown 3.3.6. Notably absent are:
 - No SQLAlchemy (Python ORM)
 - No psycopg2 or PyMySQL (database drivers)
 - No pymongo or motor (MongoDB clients)
 - No redis-py (Redis client)
 - No SQLite3 usage beyond Python stdlib
 
-**No Database Configuration:** Analysis of the Docker Compose file (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/docker-compose.yml`) reveals a single service definition for the web application with no database service containers (no PostgreSQL, MySQL, MongoDB, Redis containers defined). The application container uses no database connection environment variables.
+**No Database Configuration:** Analysis of the Docker Compose file (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/docker-compose.yml`) reveals a single service definition for the web application with no database service containers (no PostgreSQL, MySQL, MongoDB, Redis containers defined). The application container uses no database connection environment variables.
 
-**No Database Code Patterns:** Examination of `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` shows no database imports, no connection establishment code, no query execution, and no ORM model definitions. All data processing occurs in-memory during request handling with no persistence beyond the request lifecycle.
+**No Database Code Patterns:** Examination of `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` shows no database imports, no connection establishment code, no query execution, and no ORM model definitions. All data processing occurs in-memory during request handling with no persistence beyond the request lifecycle.
 
 **Implication:** The absence of a database eliminates traditional database security concerns such as SQL injection, connection string exposure, database credential management, query parameterization, and connection encryption. However, it concentrates all security concerns in the application layer and environment variable management.
 
@@ -401,7 +401,7 @@ This Flask application operates without any database, ORM, or persistent data st
 Despite the lack of a database, the application handles several categories of sensitive data:
 
 **CRITICAL SEVERITY - CTF Flag:**
-- **Storage Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, line 10
+- **Storage Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, line 10
 - **Value:** `FLAG = "@FLAG@"` (placeholder replaced during Docker build)
 - **Actual Value:** `flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}` (from `.env` file)
 - **Exposure Points:**
@@ -413,7 +413,7 @@ Despite the lack of a database, the application handles several categories of se
   6. HTTP response from `/admin/flag` endpoint
 
 **HIGH SEVERITY - Flask Session Secret:**
-- **Storage Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, line 8
+- **Storage Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, line 8
 - **Value:** Hardcoded `'supersecretkey'`
 - **Purpose:** HMAC signing of Flask session cookies
 - **Exposure:** Committed to version control, publicly visible in source code
@@ -492,7 +492,7 @@ The CTF flag follows a multi-stage flow from external configuration through buil
 The `.env` file containing the CTF flag is tracked in git and committed to version control, creating a permanent security breach:
 
 **Evidence:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/.env`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/.env`
 - **Content:** `FLAG="flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}"`
 - **Git History:** Committed in 671598f ("Initial checkpoint: Local repository setup")
 - **Exposure:** Anyone with repository access (current or historical) can extract the flag
@@ -509,7 +509,7 @@ Even if `.env` is removed in future commits, it remains in git history permanent
 
 The Dockerfile build process embeds the flag directly into the application code using sed substitution:
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/Dockerfile`, lines 12-13
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/Dockerfile`, lines 12-13
 ```dockerfile
 ARG FLAG
 RUN sed -i s/@FLAG@/$FLAG/g /app/app.py
@@ -525,7 +525,7 @@ tar -xf image.tar
 
 **HIGH SEVERITY FINDING: Hardcoded Flask Secret Key**
 
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, line 8
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, line 8
 - **Value:** `'supersecretkey'`
 - **Issues:**
   1. Not sourced from environment variables
@@ -593,9 +593,9 @@ This section catalogs all network-accessible entry points that can be invoked th
 
 **Entry Point #1: Homepage - Markdown Converter Interface**
 - **Route:** `GET /`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, lines 12-14
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, lines 12-14
 - **Function:** `index()`
-- **Template:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html`
+- **Template:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html`
 - **Purpose:** Serves the main application interface with a form for markdown conversion
 - **Input Parameters:** None (GET request with no query parameters processed)
 - **Response:** HTML form with two input methods: URL fetching or direct markdown text
@@ -607,9 +607,9 @@ This section catalogs all network-accessible entry points that can be invoked th
 
 **Entry Point #2: Markdown Conversion Handler**
 - **Route:** `POST /convert`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, lines 16-43
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, lines 16-43
 - **Function:** `convert()`
-- **Template:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html`
+- **Template:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html`
 - **Purpose:** Processes markdown conversion from either URL or direct text input
 - **Input Parameters:**
   - `url` (POST form field, optional) - URL to fetch markdown content from
@@ -630,7 +630,7 @@ This section catalogs all network-accessible entry points that can be invoked th
 
 **Entry Point #3: Static CSS File Serving**
 - **Route:** `/static/<filename>` (Flask default static file handler)
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/static/style.css`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/static/style.css`
 - **Purpose:** Serves application stylesheet
 - **Authentication:** None required (publicly accessible)
 - **Security Implications:** 
@@ -642,9 +642,9 @@ This section catalogs all network-accessible entry points that can be invoked th
 
 **Entry Point #4: Admin Interface**
 - **Route:** `GET /admin`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, lines 45-49
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, lines 45-49
 - **Function:** `admin()`
-- **Template:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/admin.html`
+- **Template:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/admin.html`
 - **Access Control:** IP address restriction checking `request.remote_addr != '127.0.0.1'` (line 47)
 - **Response on Failure:** HTTP 403 Forbidden (line 48)
 - **Response on Success:** HTML page with navigation links to flag and converter
@@ -656,9 +656,9 @@ This section catalogs all network-accessible entry points that can be invoked th
 
 **Entry Point #5: Flag Retrieval Endpoint (HIGH-VALUE TARGET)**
 - **Route:** `GET /admin/flag`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, lines 51-55
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, lines 51-55
 - **Function:** `admin_flag()`
-- **Template:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/flag.html`
+- **Template:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/flag.html`
 - **Access Control:** IP address restriction checking `request.remote_addr != '127.0.0.1'` (line 53)
 - **Response on Failure:** HTTP 403 Forbidden (line 54)
 - **Response on Success:** HTML page displaying the CTF flag via `{{ flag }}` variable (flag.html line 13)
@@ -691,7 +691,7 @@ The only "internal communication" occurs during SSRF exploitation, where the url
 The application implements only rudimentary input validation, creating multiple attack vectors:
 
 **URL Parameter Validation (POST /convert):**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, lines 18-23
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, lines 18-23
 - **Implementation:**
   ```python
   url = request.form.get('url')
@@ -711,7 +711,7 @@ The application implements only rudimentary input validation, creating multiple 
   - No timeout enforcement for URL fetching
 
 **Markdown Text Validation (POST /convert):**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, line 19
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, line 19
 - **Implementation:** `markdown_text = request.form.get('markdown_text')`
 - **Validation Performed:** NONE beyond null check
 - **Missing Validations:**
@@ -722,7 +722,7 @@ The application implements only rudimentary input validation, creating multiple 
   - No style/CSS filtering (potential CSS injection)
 
 **Character Encoding Handling:**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, lines 28-30
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, lines 28-30
 - **Implementation:**
   ```python
   raw_data = response.read()
@@ -732,7 +732,7 @@ The application implements only rudimentary input validation, creating multiple 
 - **Security Implication:** Relies on HTTP response charset header, which is user-controllable in SSRF scenarios. Attacker-controlled encoding could potentially bypass filters, though no filters exist to bypass.
 
 **Output Encoding (Template Rendering):**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html`, line 33
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html`, line 33
 - **Implementation:** `{{ html_content|safe }}`
 - **CRITICAL VULNERABILITY:** The `|safe` filter explicitly disables Jinja2's auto-escaping mechanism, rendering all HTML and JavaScript without sanitization
 - **Contrast with Safe Usage:** Other template variables like `{{ message }}` (flash messages) are properly auto-escaped
@@ -776,15 +776,15 @@ response = urllib.request.urlopen(url, timeout=5)
 The following components were identified during codebase analysis but are explicitly **OUT-OF-SCOPE** as they are not network-accessible:
 
 **Build and Deployment Infrastructure:**
-- **Makefile:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/Makefile`
+- **Makefile:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/Makefile`
   - **Justification:** Build tooling requiring manual execution via `make` command, not exposed through HTTP interface
-- **Docker Compose Configuration:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/docker-compose.yml`
+- **Docker Compose Configuration:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/docker-compose.yml`
   - **Justification:** Infrastructure configuration file, not executable code exposed to network requests
-- **Dockerfile:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/Dockerfile`
+- **Dockerfile:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/Dockerfile`
   - **Justification:** Container build instructions, not runtime-accessible code
 
 **Metadata and Documentation:**
-- **Benchmark Metadata:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/benchmark.json`
+- **Benchmark Metadata:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/benchmark.json`
   - **Justification:** CTF challenge metadata file, not served by the application
 
 These components are relevant for infrastructure security analysis (e.g., Dockerfile security hardening, secret management in build process) but do not constitute network-accessible attack surface.
@@ -832,7 +832,7 @@ if not SECRET_KEY:
 The application implements zero security headers at the application level and no infrastructure configuration for security headers was detected. A comprehensive search of the codebase revealed:
 
 **Application-Level Headers (Flask):**
-- **File Analyzed:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`
+- **File Analyzed:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`
 - **Finding:** No `@app.after_request` hooks to add security headers
 - **Missing Headers:**
   - **Strict-Transport-Security (HSTS):** Not configured anywhere in the application or infrastructure
@@ -849,7 +849,7 @@ The application implements zero security headers at the application level and no
 - **Implication:** The Flask application serves requests directly without a reverse proxy layer that could inject security headers
 
 **Docker Configuration:**
-- **File Analyzed:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/docker-compose.yml`
+- **File Analyzed:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/docker-compose.yml`
 - **Finding:** No environment variables configuring security headers
 - **Port Configuration:** Direct port 80 exposure with no TLS termination layer
 
@@ -905,7 +905,7 @@ The application implements zero security event logging, no monitoring capabiliti
 
 **Application Logging:**
 - **Search Pattern:** `log|logging|logger|audit`
-- **Files Analyzed:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`
+- **Files Analyzed:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`
 - **Result:** No logging imports, no logging configuration, no log handlers
 - **Flask Default Logging:** Minimal werkzeug access logs to stderr, but no security event correlation
 
@@ -983,9 +983,9 @@ logging:
 
 This Flask application demonstrates a minimalist architecture optimized for simplicity over security, with a flat directory structure that provides clear organization but limited separation of concerns. The entire codebase consists of only five source files totaling 215 lines of code, making it trivially discoverable but lacking the architectural depth typically required for secure application development.
 
-The **root directory structure** (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/`) contains build orchestration files (`Makefile` including `../../common.mk`, suggesting this is part of a larger CTF challenge repository), Docker composition (`docker-compose.yml`), environment configuration (`.env` with the critical flag exposure), and metadata (`benchmark.json` defining CTF challenge parameters). The `app/` subdirectory contains all application logic, following Flask's conventional structure with a single-file application pattern rather than the blueprint architecture used for larger Flask projects.
+The **root directory structure** (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/`) contains build orchestration files (`Makefile` including `../../common.mk`, suggesting this is part of a larger CTF challenge repository), Docker composition (`docker-compose.yml`), environment configuration (`.env` with the critical flag exposure), and metadata (`benchmark.json` defining CTF challenge parameters). The `app/` subdirectory contains all application logic, following Flask's conventional structure with a single-file application pattern rather than the blueprint architecture used for larger Flask projects.
 
-Within the **application directory** (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/`), the Python codebase is consolidated into a single `app.py` file (59 lines) implementing all routes, business logic, and error handling. This monolithic application file approach eliminates the need for module imports and reduces cognitive overhead for analysis but violates separation of concerns principles and makes security controls difficult to layer appropriately. The `templates/` subdirectory contains three Jinja2 HTML templates (`converter.html` at 56 lines for the main interface, `admin.html` at 22 lines for the admin panel, `flag.html` at 9 lines for flag display), all following a consistent structure without template inheritance or reusable components. The `static/` subdirectory contains a single `style.css` file (69 lines) providing basic styling with no JavaScript files or client-side interactivity beyond standard HTML forms.
+Within the **application directory** (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/`), the Python codebase is consolidated into a single `app.py` file (59 lines) implementing all routes, business logic, and error handling. This monolithic application file approach eliminates the need for module imports and reduces cognitive overhead for analysis but violates separation of concerns principles and makes security controls difficult to layer appropriately. The `templates/` subdirectory contains three Jinja2 HTML templates (`converter.html` at 56 lines for the main interface, `admin.html` at 22 lines for the admin panel, `flag.html` at 9 lines for flag display), all following a consistent structure without template inheritance or reusable components. The `static/` subdirectory contains a single `style.css` file (69 lines) providing basic styling with no JavaScript files or client-side interactivity beyond standard HTML forms.
 
 The **dependency management** is handled through a minimal `requirements.txt` (3 lines) with major version pinning but no hash verification or sub-dependency locking. The `Dockerfile` (13 lines) uses a multi-stage build pattern with build arguments for flag injection, demonstrating awareness of containerization best practices but implementing the critical security flaw of embedding secrets in image layers via sed substitution. The container orchestration in `docker-compose.yml` (15 lines) defines a single service with port exposure, environment file sourcing, health checks, and build context configuration.
 
@@ -1004,46 +1004,46 @@ The **absence of common security tooling** in the directory structure is notable
 This section provides a comprehensive catalog of all security-relevant files referenced throughout the analysis, organized by security domain for downstream agent prioritization.
 
 ### Configuration Files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/docker-compose.yml` - Container orchestration, port exposure (line 8), environment file sourcing (line 10), health checks (lines 11-15)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/Dockerfile` - Container build specification, Python 3.8 EOL base image (line 1), flag injection via sed (lines 12-13), root user execution (no USER directive)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/.env` - **CRITICAL SECRET EXPOSURE:** CTF flag stored in version control (line 1: `FLAG="flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}"`)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/benchmark.json` - CTF challenge metadata (out-of-scope for network attacks)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/Makefile` - Build orchestration including `../../common.mk` (out-of-scope)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/docker-compose.yml` - Container orchestration, port exposure (line 8), environment file sourcing (line 10), health checks (lines 11-15)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/Dockerfile` - Container build specification, Python 3.8 EOL base image (line 1), flag injection via sed (lines 12-13), root user execution (no USER directive)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/.env` - **CRITICAL SECRET EXPOSURE:** CTF flag stored in version control (line 1: `FLAG="flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}"`)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/benchmark.json` - CTF challenge metadata (out-of-scope for network attacks)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/Makefile` - Build orchestration including `../../common.mk` (out-of-scope)
 
 ### Authentication & Authorization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (lines 45-49) - Admin interface IP-based access control checking `request.remote_addr != '127.0.0.1'`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (lines 51-55) - Flag endpoint IP-based access control, **PRIMARY TARGET** for SSRF bypass
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 8) - Hardcoded Flask secret key `'supersecretkey'` enabling session forgery
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 10) - FLAG variable storage (`FLAG = "@FLAG@"` replaced at build time)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (lines 45-49) - Admin interface IP-based access control checking `request.remote_addr != '127.0.0.1'`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (lines 51-55) - Flag endpoint IP-based access control, **PRIMARY TARGET** for SSRF bypass
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 8) - Hardcoded Flask secret key `'supersecretkey'` enabling session forgery
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 10) - FLAG variable storage (`FLAG = "@FLAG@"` replaced at build time)
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (lines 12-14) - Homepage route `GET /` serving converter interface
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (lines 16-43) - **CRITICAL SSRF & XSS SINK:** Conversion endpoint `POST /convert` with urllib.request.urlopen (line 27) and markdown rendering (line 35)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 58) - Flask server configuration binding to `0.0.0.0:80` with `debug=False`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (lines 12-14) - Homepage route `GET /` serving converter interface
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (lines 16-43) - **CRITICAL SSRF & XSS SINK:** Conversion endpoint `POST /convert` with urllib.request.urlopen (line 27) and markdown rendering (line 35)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 58) - Flask server configuration binding to `0.0.0.0:80` with `debug=False`
 
 ### Data Models & DB Interaction
 **N/A** - No database layer, no ORM, no data models, no SQL queries
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/requirements.txt` - Python dependencies: Flask 3.0.3 (line 1), beautifulsoup4 4.9.3 (line 2, unused), markdown 3.3.6 (line 3, XSS risk)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/requirements.txt` - Python dependencies: Flask 3.0.3 (line 1), beautifulsoup4 4.9.3 (line 2, unused), markdown 3.3.6 (line 3, XSS risk)
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/.env` (line 1) - **HIGHEST PRIORITY:** Flag in git history
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 8) - Hardcoded Flask secret key
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 10) - FLAG variable placeholder replaced during build
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/Dockerfile` (lines 12-13) - Flag injection via `ARG FLAG` and `RUN sed` command
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/.env` (line 1) - **HIGHEST PRIORITY:** Flag in git history
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 8) - Hardcoded Flask secret key
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 10) - FLAG variable placeholder replaced during build
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/Dockerfile` (lines 12-13) - Flag injection via `ARG FLAG` and `RUN sed` command
 
 ### Middleware & Input Validation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (lines 18-23) - **INADEQUATE VALIDATION:** Null check only, no URL scheme filtering, no sanitization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (lines 27-30) - URL fetching with charset detection but no timeout or size limits
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 35) - Markdown rendering with no HTML sanitization
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (lines 18-23) - **INADEQUATE VALIDATION:** Null check only, no URL scheme filtering, no sanitization
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (lines 27-30) - URL fetching with charset detection but no timeout or size limits
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 35) - Markdown rendering with no HTML sanitization
 
 ### Logging & Monitoring
 **N/A** - No logging configuration files, no monitoring setup, Flask default logging only
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/docker-compose.yml` - Single service deployment exposing port 80, health check configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/Dockerfile` - Python 3.8-slim base (EOL), root user execution, flag embedding
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/docker-compose.yml` - Single service deployment exposing port 80, health check configuration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/Dockerfile` - Python 3.8-slim base (EOL), root user execution, flag embedding
 
 **CRITICAL FINDING:** No infrastructure security configurations detected:
 - No Nginx reverse proxy configuration files
@@ -1053,10 +1053,10 @@ This section provides a comprehensive catalog of all security-relevant files ref
 - No security header injection at infrastructure layer
 
 ### CTF Flag Storage (HIGH-VALUE TARGETS)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/.env` (line 1) - **PRIMARY FLAG STORAGE:** `FLAG="flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}"` committed to git
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` (line 10) - In-memory FLAG variable after sed substitution
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/flag.html` (line 13) - Template rendering `{{ flag }}` variable
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/Dockerfile` (line 13) - Flag injection command `RUN sed -i s/@FLAG@/$FLAG/g /app/app.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/.env` (line 1) - **PRIMARY FLAG STORAGE:** `FLAG="flag{cbf59a8d-b5f1-4a8e-8286-0c249b14d682}"` committed to git
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` (line 10) - In-memory FLAG variable after sed substitution
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/flag.html` (line 13) - Template rendering `{{ flag }}` variable
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/Dockerfile` (line 13) - Flag injection command `RUN sed -i s/@FLAG@/$FLAG/g /app/app.py`
 
 **Flag Retrieval Methods:**
 1. **Git History Extraction:** `git show 671598f:.env` retrieves original flag
@@ -1065,13 +1065,13 @@ This section provides a comprehensive catalog of all security-relevant files ref
 4. **Source Code Access:** Direct reading of `/app/app.py` in running container shows FLAG variable value
 
 ### Templates (XSS Attack Surface)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html` (line 33) - **CRITICAL XSS SINK:** `{{ html_content|safe }}` disables auto-escaping
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html` (lines 13-30) - Form inputs for `url` and `markdown_text` with no CSRF token
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/admin.html` (lines 12-13) - Admin navigation links
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/flag.html` (line 13) - Flag display `{{ flag }}` (properly escaped, not a vulnerability)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html` (line 33) - **CRITICAL XSS SINK:** `{{ html_content|safe }}` disables auto-escaping
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html` (lines 13-30) - Form inputs for `url` and `markdown_text` with no CSRF token
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/admin.html` (lines 12-13) - Admin navigation links
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/flag.html` (line 13) - Flag display `{{ flag }}` (properly escaped, not a vulnerability)
 
 ### Static Assets
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/static/style.css` - Styling only, no security relevance
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/static/style.css` - Styling only, no security relevance
 
 ---
 
@@ -1083,7 +1083,7 @@ This section catalogs Cross-Site Scripting vulnerabilities in **network-accessib
 
 **SINK #1: Jinja2 |safe Filter Disabling Auto-Escaping**
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html`, line 33
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html`, line 33
 
 **Code:**
 ```html
@@ -1354,7 +1354,7 @@ if markdown_text and len(markdown_text) > MAX_MARKDOWN_LENGTH:
 
 | Sink ID | File Path | Line | Sink Type | Render Context | User Input Source | Exploitability | CVSS |
 |---------|-----------|------|-----------|----------------|-------------------|----------------|------|
-| XSS-001 | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/templates/converter.html` | 33 | Jinja2 `\|safe` filter | HTML Body | `markdown_text` POST param or `url` fetched content | CRITICAL | 8.2 |
+| XSS-001 | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/templates/converter.html` | 33 | Jinja2 `\|safe` filter | HTML Body | `markdown_text` POST param or `url` fetched content | CRITICAL | 8.2 |
 
 **Total XSS Sinks Detected:** 1 (CRITICAL severity)
 
@@ -1373,7 +1373,7 @@ This section identifies Server-Side Request Forgery vulnerabilities in **network
 
 **SINK #1: urllib.request.urlopen with User-Controlled URL**
 
-**Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py`, line 27
+**Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py`, line 27
 
 **Code Context (lines 26-30):**
 ```python
@@ -1747,7 +1747,7 @@ Python's urllib handles these as literal strings, not protocol indicators, makin
 
 | Sink ID | File Path | Line | Function | User Input | Validation | Protocols | Impact | CVSS |
 |---------|-----------|------|----------|------------|------------|-----------|--------|------|
-| SSRF-001 | `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` | 27 | `urllib.request.urlopen()` | `request.form.get('url')` | **NONE** | http, https, file, ftp, data | **CRITICAL** - Flag extraction, file disclosure, cloud metadata access, internal network scanning | 9.6 |
+| SSRF-001 | `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` | 27 | `urllib.request.urlopen()` | `request.form.get('url')` | **NONE** | http, https, file, ftp, data | **CRITICAL** - Flag extraction, file disclosure, cloud metadata access, internal network scanning | 9.6 |
 
 **Total SSRF Sinks Detected:** 1 (CRITICAL severity)
 

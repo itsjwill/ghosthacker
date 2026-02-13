@@ -122,7 +122,7 @@ External subdomain discoveries (not related to target application):
 **CRITICAL FINDING: NO FUNCTIONAL AUTHENTICATION EXISTS**
 
 **Login Endpoint:** `GET/POST /login`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
 - **Accepts Credentials:** Yes (username and password fields in HTML form)
 - **Validates Credentials:** **NO** - POST requests are immediately redirected without processing
 - **Creates Sessions:** **NO** - No session tokens, cookies, or authentication state
@@ -165,13 +165,13 @@ External subdomain discoveries (not related to target application):
 ### Code Pointers
 
 **Application Initialization:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` (lines 1-7)
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` (lines 1-7)
 - Missing: `app.config['SECRET_KEY']` (required for session signing)
 - Missing: Session configuration (`SESSION_COOKIE_*` settings)
 - Missing: Authentication library initialization (Flask-Login, etc.)
 
 **Login Route Handler:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
 ```python
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -181,7 +181,7 @@ def login():
 ```
 
 **Client-Side Form:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html` (lines 17-33, 48-66)
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html` (lines 17-33, 48-66)
 - Form submission prevented by JavaScript (line 53: `event.preventDefault()`)
 - No CSRF token present
 - Always displays error message (line 64)
@@ -236,7 +236,7 @@ def login():
 - **Required Role:** Anonymous (no authentication)
 - **Object ID Parameters:** None
 - **Authorization Mechanism:** None
-- **Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 5-7
+- **Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 5-7
 - **Functionality:** Simple redirect using `redirect(url_for('login'))`
 - **Security:** No security concerns (no user input)
 - **Code:**
@@ -250,7 +250,7 @@ def login():
 - **Required Role:** Anonymous (no authentication)
 - **Object ID Parameters:** None
 - **Authorization Mechanism:** None
-- **Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 9-13
+- **Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 9-13
 - **Functionality:**
   - GET: Renders `login.html` template with Bootstrap form
   - POST: Accepts form submission but **immediately redirects without processing**
@@ -269,7 +269,7 @@ def login():
 - **Required Role:** Anonymous (no authentication)
 - **Object ID Parameters:** `filename` (query parameter) - identifies which file to serve
 - **Authorization Mechanism:** **NONE** - No validation or access control
-- **Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 16-19
+- **Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 16-19
 - **Functionality:** Serves files from `/var/www/webapp/app/static/` directory using Flask's `send_from_directory()`
 - **Vulnerability:** Path traversal - filename parameter not validated
 - **Apache Bypass:** Circumvents Apache's FilesMatch directive blocking `/static/flag`
@@ -287,7 +287,7 @@ def login():
 In addition to the `/resource` endpoint, static files are also accessible directly via Apache's Alias directive:
 
 **Apache Configuration:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` lines 18-28
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` lines 18-28
 - Alias: `/static` → `/var/www/webapp/app/static/`
 - Directory listing: **ENABLED** (`Options Indexes`)
 - Flag file protection: **BLOCKED** (`FilesMatch "^flag$"` denies all)
@@ -314,7 +314,7 @@ In addition to the `/resource` endpoint, static files are also accessible direct
 
 **1. Filename Parameter - `/resource` Endpoint [CRITICAL]**
 - **Location:** `GET /resource?filename=<value>`
-- **Extraction Point:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` line 18
+- **Extraction Point:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` line 18
 - **Code:** `filename = request.args.get('filename')`
 - **Validation:** **NONE** - No input validation, sanitization, or whitelist
 - **Usage:** Passed directly to `send_from_directory('static', filename)` at line 19
@@ -514,7 +514,7 @@ No role switching or impersonation features
 - No role stored anywhere (no database, no session, no JWT)
 
 **Code Evidence:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (complete file)
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (complete file)
 - No authorization decorators on any route
 - No inline permission checks (no `if user.role == 'admin':` logic)
 - No imports of authentication/authorization libraries
@@ -642,7 +642,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 - Any database driver - NOT FOUND
 
 **Requirements Analysis:**
-File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt`
+File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt`
 ```
 flask
 ```
@@ -707,7 +707,7 @@ Only Flask is installed - no database drivers.
 **Path Traversal Source:**
 - **Endpoint:** `GET /resource`
 - **Parameter:** `filename` (query parameter)
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` line 18
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` line 18
 - **Code:** `filename = request.args.get('filename')`
 - **Sink:** Line 19: `send_from_directory('static', filename)`
 - **Vulnerability Type:** Path traversal / Unauthorized file access (NOT command or SQL injection)
@@ -739,7 +739,7 @@ The Flask application does not execute system commands or perform database opera
 **Finding:** Missing critical security headers
 
 **Apache Configuration:**
-File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf`
+File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf`
 
 **Headers Set:**
 - `Access-Control-Allow-Origin: *` (line 9) - **INSECURE** wildcard CORS
@@ -761,7 +761,7 @@ File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-htt
 ### 10.2 Docker Security
 
 **Dockerfile Analysis:**
-File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile`
+File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile`
 
 **Security Issues:**
 1. **Secrets in Build Args:** Flag passed as build argument (line 20: `ARG FLAG`) - visible in image metadata via `docker history`
@@ -770,7 +770,7 @@ File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile
 4. **Base Image:** debian:bullseye-slim (minimal, but no version pinning)
 
 **docker-compose.yml Analysis:**
-File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml`
+File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml`
 
 **Security Issues:**
 1. **ENV File Exposure:** Flag stored in `.env` file (line 10: `env_file: - .env`)
@@ -782,7 +782,7 @@ File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose
 **Flag Storage Locations:**
 
 1. **Source (`.env` file):**
-   - File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/.env` line 1
+   - File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/.env` line 1
    - Content: `FLAG="flag{f2415bf1-1c95-46bd-88fb-14762c7808fa}"`
    - Risk: Plaintext secret in repository
 
@@ -840,7 +840,7 @@ File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose
 **Finding:** Application runs on HTTP only (no encryption)
 
 **Apache Configuration:**
-- File: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` line 1
+- File: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` line 1
 - VirtualHost: `<VirtualHost *:80>` - HTTP only
 - No SSL certificate configuration
 - No port 443 listener

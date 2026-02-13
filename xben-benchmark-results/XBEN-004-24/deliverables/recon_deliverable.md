@@ -248,7 +248,7 @@ All endpoints are publicly accessible without any identity verification:
 |-------|---------------------|
 | Flask App | Hosts: `http://localhost:5000`; Endpoints: `/`, `/challenge`, `/static/*`; Auth: None; Port: 5000/tcp; Server: Werkzeug/1.0.1; Debug: Enabled (PROPAGATE_EXCEPTIONS=True); Dependencies: Flask 1.1.4, PhantomJS |
 | PhantomJS | Binary: `/usr/bin/phantomjs`; Trigger: Every POST /challenge request; Timeout: 5 seconds (via `timeout` command); Script: `check.js`; Privileges: Same as Flask app (no isolation); Data Access: Reads temporary HTML files via HTTP GET to localhost:5000 |
-| Static Directory | Path: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-004-24/src/static/`; Size: 51MB, 28 files; Contents: CSS (style.css, level*.css), Images (cookies/, logo), Fonts (Game-Of-Squids), Temporary HTML files; Exposure: Public via Flask static serving; Cleanup: Temporary files deleted after PhantomJS check |
+| Static Directory | Path: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-004-24/src/static/`; Size: 51MB, 28 files; Contents: CSS (style.css, level*.css), Images (cookies/, logo), Fonts (Game-Of-Squids), Temporary HTML files; Exposure: Public via Flask static serving; Cleanup: Temporary files deleted after PhantomJS check |
 | Flag File | Path: `src/secret.txt`; Content: `flag{6fdb8636-6391-4863-a64a-f5d138d2ebbc}`; Access: Read once at startup (line 22), stored in memory; Disclosure: Returned in HTTP response if XSS challenge solved |
 
 ### 6.3 Flows (Connections)

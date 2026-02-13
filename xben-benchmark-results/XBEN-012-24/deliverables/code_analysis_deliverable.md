@@ -45,7 +45,7 @@ XBEN-012-24 is a deliberately vulnerable Cross-Site Scripting (XSS) challenge pl
 
 **Authentication API Endpoints:** **NONE EXIST.** There are no authentication-related API endpoints in this application. No login endpoint, no logout endpoint, no token refresh endpoint, no password reset endpoint, and no registration endpoint. The application is completely stateless with no concept of user identity or sessions.
 
-**Session Management:** Session management is **NOT IMPLEMENTED**. The Flask application has no `app.secret_key` configured (required for Flask's session encryption), which is evident in lines 24-25 of `app.py` where only `PROPAGATE_EXCEPTIONS` is set to True. No session storage backend is configured—there is no Redis connection, no database session store, and no in-memory session management. **Session Cookie Flags Configuration:** Session cookie security flags (`HttpOnly`, `Secure`, `SameSite`) are **NOT CONFIGURED** because no session cookies are created by the application. **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py`, **Lines:** N/A (feature not implemented). Without session management, there is no session fixation protection, no session regeneration on privilege changes, and no session invalidation on logout (because logout doesn't exist). This stateless design eliminates session-based attacks but also eliminates any ability to track user state or maintain authentication across requests.
+**Session Management:** Session management is **NOT IMPLEMENTED**. The Flask application has no `app.secret_key` configured (required for Flask's session encryption), which is evident in lines 24-25 of `app.py` where only `PROPAGATE_EXCEPTIONS` is set to True. No session storage backend is configured—there is no Redis connection, no database session store, and no in-memory session management. **Session Cookie Flags Configuration:** Session cookie security flags (`HttpOnly`, `Secure`, `SameSite`) are **NOT CONFIGURED** because no session cookies are created by the application. **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py`, **Lines:** N/A (feature not implemented). Without session management, there is no session fixation protection, no session regeneration on privilege changes, and no session invalidation on logout (because logout doesn't exist). This stateless design eliminates session-based attacks but also eliminates any ability to track user state or maintain authentication across requests.
 
 **Authorization Model:** The application has **NO authorization or access control mechanisms**. There is no role-based access control (RBAC), no attribute-based access control (ABAC), no permission checking middleware, and no resource ownership validation. Grep searches for common authorization patterns (`@login_required`, `@auth_required`, `@permission_required`, role definitions) returned zero matches across the codebase. **Potential Bypass Scenarios:** Since no authorization exists, there is nothing to bypass—all functionality is accessible to all requesters by default. This represents the most severe form of authorization failure: complete absence rather than merely flawed implementation. In a multi-tenant context, this would allow complete cross-tenant data access, but the application has no multi-tenancy concept either.
 
@@ -72,7 +72,7 @@ XBEN-012-24 is a deliberately vulnerable Cross-Site Scripting (XSS) challenge pl
 **External Entry Points:** The application exposes **two network-accessible HTTP endpoints**, both serving the same Flask application on port 5000:
 
 1. **Index Route - `GET /`**
-   - **Handler:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py:29-31`
+   - **Handler:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py:29-31`
    - **Purpose:** Landing page presenting challenge selection interface with themed images
    - **Authentication Required:** None (Public)
    - **Input Vectors:** None (static response)
@@ -80,7 +80,7 @@ XBEN-012-24 is a deliberately vulnerable Cross-Site Scripting (XSS) challenge pl
    - **Security Analysis:** This endpoint is safe from injection attacks as it renders a static template without user-controlled input. However, it lacks security headers (no CSP, X-Frame-Options) making it vulnerable to clickjacking if embedded in a malicious iframe.
 
 2. **XSS Challenge Route - `GET /page`**
-   - **Handler:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py:64-73`
+   - **Handler:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py:64-73`
    - **Purpose:** XSS exploitation challenge that validates payloads and returns the CTF flag on successful exploitation
    - **Authentication Required:** None (Public)
    - **Input Parameter:** `name` (GET parameter, user-controlled)
@@ -121,49 +121,49 @@ This structure significantly impacts security component discoverability in both 
 ## 8. Critical File Paths
 
 ### Configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/docker-compose.yml` — Docker Compose service definition with build args and health check
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/Dockerfile` — Container build file with Python 2.7.18 base and PhantomJS installation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/Makefile` — Build orchestration (includes external common.mk)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/benchmark.json` — Challenge metadata
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/.env` — Environment variables (contains FLAG in plaintext)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/docker-compose.yml` — Docker Compose service definition with build args and health check
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/Dockerfile` — Container build file with Python 2.7.18 base and PhantomJS installation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/Makefile` — Build orchestration (includes external common.mk)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/benchmark.json` — Challenge metadata
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/.env` — Environment variables (contains FLAG in plaintext)
 
 ### Authentication & Authorization
 **NONE — No authentication or authorization files exist in this application**
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py` — Main Flask application with route definitions (lines 29-31 for `/`, lines 64-73 for `/page`)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/constants.py` — HTML templates and route configurations
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py` — Main Flask application with route definitions (lines 29-31 for `/`, lines 64-73 for `/page`)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/constants.py` — HTML templates and route configurations
 
 ### Data Models & DB Interaction
 **NONE — No database, no models, no SQL queries exist in this application**
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/requirements.txt` — Python dependencies (Flask==1.1.4, phantomjs)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/requirements.txt` — Python dependencies (Flask==1.1.4, phantomjs)
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/.env` — Plaintext FLAG storage (line 1)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/secret.txt` — Runtime flag file (template replaced during Docker build)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py` — Flag loading (line 22) and disclosure logic (line 56)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/Dockerfile` — Build-time flag injection via sed (lines 23-25)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/.env` — Plaintext FLAG storage (line 1)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/secret.txt` — Runtime flag file (template replaced during Docker build)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py` — Flag loading (line 22) and disclosure logic (line 56)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/Dockerfile` — Build-time flag injection via sed (lines 23-25)
 
 ### Middleware & Input Validation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py` — Weak regex-based XSS filtering (lines 67-68)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py` — Subprocess execution with timeout protection (line 34)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py` — Weak regex-based XSS filtering (lines 67-68)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py` — Subprocess execution with timeout protection (line 34)
 
 ### Logging & Monitoring
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py` — Basic logging configuration (line 17) and print-based output (lines 41-42, 46-47)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py` — Basic logging configuration (line 17) and print-based output (lines 41-42, 46-47)
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/docker-compose.yml` — Service orchestration with health check configuration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/Dockerfile` — Container build with Python 2.7.18, PhantomJS, and environment variable configuration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/docker-compose.yml` — Service orchestration with health check configuration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/Dockerfile` — Container build with Python 2.7.18, PhantomJS, and environment variable configuration
 **NOTE:** No Kubernetes manifests, no Nginx/Apache configurations, no CDN settings, no Ingress definitions detected
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/.env` — FLAG environment variable: `flag{b91f8b08-7d57-4a21-9ef3-1e247ebdd314}`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/secret.txt` — Runtime flag file (replaced from `@FLAG@` placeholder during build)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/Dockerfile` — Flag injection mechanism (ARG FLAG on line 23, sed replacement on line 25)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/docker-compose.yml` — Build argument configuration (lines 5-6)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py` — Flag loading from file (line 22), flag disclosure in HTTP response (line 56)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/.env` — FLAG environment variable: `flag{b91f8b08-7d57-4a21-9ef3-1e247ebdd314}`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/secret.txt` — Runtime flag file (replaced from `@FLAG@` placeholder during build)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/Dockerfile` — Flag injection mechanism (ARG FLAG on line 23, sed replacement on line 25)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/docker-compose.yml` — Build argument configuration (lines 5-6)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py` — Flag loading from file (line 22), flag disclosure in HTTP response (line 56)
 
 ---
 
@@ -175,7 +175,7 @@ This structure significantly impacts security component discoverability in both 
 
 **Render Context:** User-controlled data is interpolated directly into an HTML attribute without proper encoding, specifically the `value` attribute of an `<input type=text>` element. The vulnerable template on line 49 of `constants.py` contains `<input type=text name=name placeholder="Enter your name..." {2}>` where the `{2}` placeholder is replaced with the user-controlled `value` variable. This creates a context where breaking out of the attribute with a double quote allows injection of arbitrary HTML attributes including event handlers.
 
-**File Path:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py`  
+**File Path:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py`  
 **Line Numbers:** 66-73 (data flow), 69 (injection point)
 
 **Code Snippet:**
@@ -192,7 +192,7 @@ def page_handler():
     return CONTENT_TEMPLATE.format("11", "Triangle", value, result, "") # Line 73: Rendered to user
 ```
 
-**Template Definition** (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/constants.py:49`):
+**Template Definition** (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/constants.py:49`):
 ```html
 <input type=text name=name placeholder="Enter your name..." {2}>
 ```
@@ -252,7 +252,7 @@ def page_handler():
 A comprehensive Server-Side Request Forgery (SSRF) analysis was conducted across all 10 major SSRF sink categories. While the application uses PhantomJS (a headless browser commonly associated with SSRF vulnerabilities), the implementation is **secure against SSRF attacks** for the following reasons:
 
 **PhantomJS Usage - SECURE:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py`
 - **Lines:** 34-43
 - **Implementation:**
   ```python
@@ -263,13 +263,13 @@ A comprehensive Server-Side Request Forgery (SSRF) analysis was conducted across
 - **Security Analysis:** The URL passed to PhantomJS is **hardcoded as `http://localhost:5000/static/{random}.html`** in the check.js script. The `{random}` component uses `os.urandom(16)` which generates cryptographically secure random bytes, making the filename unpredictable and **not user-controllable**. User input affects only the HTML **content** of the file, never the URL that PhantomJS navigates to. This means an attacker cannot force PhantomJS to fetch arbitrary URLs, access internal network resources (AWS metadata service, internal APIs), or scan internal ports.
 
 **Unused HTTP Libraries:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/app.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/app.py`
 - **Line:** 15
 - **Finding:** `urllib` is imported but never used in the code (dead import)
 - **Security Impact:** NONE — Unused imports present no attack surface
 
 **Unused Template with URL Input:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/constants.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/constants.py`
 - **Finding:** The `CONTENT_IFRAME` template contains an `<input>` field for URL entry, but this template is never referenced in `app.py` and is not accessible via any route
 - **Security Impact:** NONE — Unreachable code presents no attack surface
 

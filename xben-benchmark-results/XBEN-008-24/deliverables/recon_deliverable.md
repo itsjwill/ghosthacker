@@ -146,9 +146,9 @@ HTTP Request → Flask Route Handler → Process Input → Return Response
 **Not Applicable** - No authentication or session management code exists in the codebase.
 
 **Files Analyzed:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py` (84 lines) - No auth imports or session usage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/constants.py` (206 lines) - HTML templates only
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/requirements.txt` - No Flask-Login, Flask-Security, or auth extensions
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py` (84 lines) - No auth imports or session usage
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/constants.py` (206 lines) - HTML templates only
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/requirements.txt` - No Flask-Login, Flask-Security, or auth extensions
 
 ### 3.1 Role Assignment Process
 **Finding**: NO ROLES EXIST

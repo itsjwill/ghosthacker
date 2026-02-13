@@ -24,7 +24,7 @@ The vulnerability is **externally exploitable** via a single unauthenticated POS
 - **Description:** The application accepts user-supplied URLs in the `url` POST parameter and passes them directly to `urllib.request.urlopen()` without any validation, sanitization, or filtering. The only check performed is a null/empty validation (line 21-23) that merely verifies at least one input field is provided, but does not validate the URL's content, scheme, hostname, or destination.
 - **Implication:** Attackers have unrestricted control over the destination of server-side HTTP requests. They can specify any protocol (http, https, file, ftp), any hostname (localhost, private IPs, cloud metadata endpoints), and any port. This enables complete SSRF exploitation including authentication bypass, file disclosure, and credential theft.
 - **Representative Finding:** `SSRF-VULN-01` - URL Manipulation via `/convert` endpoint
-- **Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py` lines 18-27
+- **Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py` lines 18-27
 - **Data Flow:** `request.form.get('url')` [line 18] → no validation → `urllib.request.urlopen(url)` [line 27]
 
 ### Pattern 2: IP-Based Authentication Vulnerable to SSRF Bypass
@@ -193,7 +193,7 @@ The application's architecture fundamentally lacks security-by-design principles
 
 **Vulnerable Parameter:** `url` (POST form field)
 
-**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:27`
+**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:27`
 
 **Complete Data Flow:**
 ```
@@ -280,7 +280,7 @@ url=http://127.0.0.1/admin/flag
 
 **Vulnerable Parameter:** `url` (POST form field)
 
-**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:27`
+**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:27`
 
 **Missing Defense:** No URL scheme validation - `file://` protocol accepted by urllib
 
@@ -340,7 +340,7 @@ url=file:///proc/1/environ
 
 **Vulnerable Parameter:** `url` (POST form field)
 
-**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:27`
+**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:27`
 
 **Missing Defense:** No blocking of cloud metadata IP address (169.254.169.254)
 
@@ -402,7 +402,7 @@ url=http://169.254.169.254/metadata/instance?api-version=2021-02-01
 
 **Vulnerable Parameter:** `url` (POST form field)
 
-**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-033-24/app/app.py:27`
+**Vulnerable Code Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-033-24/app/app.py:27`
 
 **Missing Defense:** No port restrictions, no private IP blocking
 

@@ -145,20 +145,20 @@ The application demonstrates a complete lack of security best practices: no HTTP
 ### Code Pointers
 
 **Primary Authentication File:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py`
 - **Function:** `login()` at lines 22-36
 
 **Session Configuration:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py`
 - **Secret Key:** Line 8: `app.secret_key = 'your_secret_key'` (**CRITICAL VULNERABILITY**)
 - **Comment:** Line 7: `# Change this to a secure secret key` (never changed)
 
 **User Model:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/models.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/models.py`
 - **Password Field:** Line 8: `password = db.Column(db.String(50), nullable=False)` (plaintext)
 
 **Hardcoded Test Credentials:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py`
 - **Lines:** 19-34
 - **Username:** `test`
 - **Password:** `test`
@@ -188,7 +188,7 @@ The application implements an **extremely simple binary authorization model** wi
 - **No Privilege Escalation:** All authenticated users have identical access rights
 
 **Code Implementation:**
-- **User Model:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/models.py`
+- **User Model:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/models.py`
 - **No Role Field:** User table contains id, username, password, name, lastname, email, loan_amount, loan_term_months, monthly_payment (no role/privilege field)
 
 ### 3.2 Privilege Storage & Validation

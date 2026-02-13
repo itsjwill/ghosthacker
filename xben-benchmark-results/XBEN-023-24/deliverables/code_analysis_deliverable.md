@@ -122,7 +122,7 @@ The authentication system encompasses the following network-accessible endpoints
 
 - **SameSite Flag:** NOT CONFIGURED - The absence of `app.config['SESSION_COOKIE_SAMESITE']` (should be 'Lax' or 'Strict') means session cookies are sent with cross-site requests, enabling Cross-Site Request Forgery (CSRF) attacks. Combined with the complete absence of CSRF tokens in forms, authenticated actions can be triggered from attacker-controlled domains.
 
-**Exact File and Line for Session Cookie Configuration:** Session cookie flags should be configured in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py` immediately after line 8 (where `app.secret_key` is set), but these configurations are **completely missing**. The correct implementation should include:
+**Exact File and Line for Session Cookie Configuration:** Session cookie flags should be configured in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py` immediately after line 8 (where `app.secret_key` is set), but these configurations are **completely missing**. The correct implementation should include:
 
 ```python
 app.config['SESSION_COOKIE_HTTPONLY'] = True  # MISSING
@@ -193,7 +193,7 @@ This pattern appears in `/home` (line 51), `/profile` (line 63), and `/loan_deta
 
 ### Database Security
 
-**Database Configuration and Credential Management:** The application uses **MySQL 5.7.15** as its database server, an outdated version released in 2016 with multiple known CVEs including CVE-2017-3600, CVE-2017-3633, CVE-2018-2562, and others. Modern MySQL deployments use version 8.x, which includes significant security improvements. The database configuration is defined in the application initialization file at `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py` line 11:
+**Database Configuration and Credential Management:** The application uses **MySQL 5.7.15** as its database server, an outdated version released in 2016 with multiple known CVEs including CVE-2017-3600, CVE-2017-3633, CVE-2018-2562, and others. Modern MySQL deployments use version 8.x, which includes significant security improvements. The database configuration is defined in the application initialization file at `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py` line 11:
 
 ```python
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:loan_calculator@db/database'
@@ -203,8 +203,8 @@ This single line exposes multiple critical security failures: (1) **Root User Ac
 
 The database root password is **duplicated in three locations**, further exposing the credentials:
 - **Application Code:** `app/__init__.py` line 11 (as shown above)
-- **MySQL Dockerfile:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/mysql/Dockerfile` line 3: `ENV MYSQL_ROOT_PASSWORD=loan_calculator`
-- **Docker Compose Healthcheck:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/docker-compose.yml` line 7: `mysqladmin ping -h localhost -u root -ploan_calculator`
+- **MySQL Dockerfile:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/mysql/Dockerfile` line 3: `ENV MYSQL_ROOT_PASSWORD=loan_calculator`
+- **Docker Compose Healthcheck:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/docker-compose.yml` line 7: `mysqladmin ping -h localhost -u root -ploan_calculator`
 
 This credential replication across configuration files creates multiple exposure points and demonstrates a systemic failure in secret management practices.
 
@@ -243,7 +243,7 @@ No raw SQL queries using `.execute()` or string concatenation were found. The OR
    - Loan Terms: User.loan_term_months (Integer)
    - Monthly Payments: User.monthly_payment (Float)
 
-All sensitive data is stored in a single database table (`User` model in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/models.py`) with **no encryption, no masking, no pseudonymization, and no access auditing**. The database schema treats passwords identically to non-sensitive fields like names, representing a catastrophic data protection failure.
+All sensitive data is stored in a single database table (`User` model in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/models.py`) with **no encryption, no masking, no pseudonymization, and no access auditing**. The database schema treats passwords identically to non-sensitive fields like names, representing a catastrophic data protection failure.
 
 **Data Flow Analysis - Input to Storage:**
 
@@ -324,14 +324,14 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
 **Public Endpoints (No Authentication Required):**
 
 1. **Root/Index Endpoint - `/`**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 17-19
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 17-19
    - **HTTP Methods:** GET
    - **Functionality:** Redirects to `/login` using `redirect(url_for('login'))`
    - **Attack Surface:** Minimal - simple redirect with no user input processing
    - **Security Notes:** Hardcoded redirect destination prevents open redirect vulnerabilities
 
 2. **Login Endpoint - `/login`**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 22-36
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 22-36
    - **HTTP Methods:** GET (display form), POST (process credentials)
    - **Input Parameters:**
      - `username` (POST form field, no validation)
@@ -349,7 +349,7 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
 **Authenticated Endpoints (Session-Based Authentication Required):**
 
 3. **Logout Endpoint - `/logout`**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 39-43
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 39-43
    - **HTTP Methods:** GET
    - **Authentication:** No explicit check (assumes authenticated user, but accepts unauthenticated requests)
    - **Functionality:** Removes `user_id` from session and redirects to `/login`
@@ -357,7 +357,7 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
    - **Security Issues:** Does not invalidate session cookie, does not prevent session reuse if cookie is captured before logout
 
 4. **Home Dashboard - `/home`**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 46-55
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 46-55
    - **HTTP Methods:** GET
    - **Authentication:** Session check at line 49: `user_id = session.get('user_id')`
    - **Functionality:** Displays user profile and loan information
@@ -366,7 +366,7 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
    - **Security Notes:** Read-only endpoint, user data isolated by session user_id
 
 5. **Profile Management - `/profile`**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 58-79
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 58-79
    - **HTTP Methods:** GET (display form), POST (update profile)
    - **Authentication:** Session check at line 61
    - **Input Parameters (POST):**
@@ -385,7 +385,7 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
    - **Data Flow:** User input → Type conversion → ORM update → Database write (all plaintext)
 
 6. **Loan Details Display - `/loan_details`**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 82-92
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 82-92
    - **HTTP Methods:** GET
    - **Authentication:** Session check at line 85
    - **Functionality:** Displays loan details and provides button to load amortization table in iframe
@@ -394,7 +394,7 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
    - **Client-Side Code:** Contains jQuery that sets iframe src on button click (loan_details.html lines 50-56)
 
 7. **Total Loan Payments API - `/total_loan_payments` (CRITICAL SSTI VULNERABILITY)**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 95-119
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 95-119
    - **HTTP Methods:** GET
    - **Authentication:** Session check at line 98
    - **Input Parameters (GET query):**
@@ -419,7 +419,7 @@ The application exposes **8 HTTP endpoints** on **port 80 (unencrypted HTTP)**. 
    - **Impact:** Remote Code Execution, flag retrieval, container compromise
 
 8. **Amortization Table - `/amortization` (CRITICAL SSTI VULNERABILITY + MISSING AUTH)**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` lines 122-177
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` lines 122-177
    - **HTTP Methods:** GET
    - **Authentication:** **MISSING - No session check (authorization bypass)**
    - **Input Parameters (GET query):**
@@ -556,7 +556,7 @@ The absence of background processing simplifies security analysis—all attack v
 
 **1. Flask Session Secret Key**
 - **Value:** `your_secret_key`
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py` line 8
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py` line 8
 - **Code:** `app.secret_key = 'your_secret_key'`
 - **Comment in Source:** Line 7 states "Change this to a secure secret key" (never changed)
 - **Purpose:** HMAC-SHA256 signing key for session cookies
@@ -567,15 +567,15 @@ The absence of background processing simplifies security analysis—all attack v
 **2. MySQL Root Password**
 - **Value:** `loan_calculator`
 - **Locations:** Exposed in THREE separate files:
-  - **Application Code:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py` line 11
+  - **Application Code:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py` line 11
     ```python
     app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:loan_calculator@db/database'
     ```
-  - **Database Dockerfile:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/mysql/Dockerfile` line 3
+  - **Database Dockerfile:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/mysql/Dockerfile` line 3
     ```dockerfile
     ENV MYSQL_ROOT_PASSWORD=loan_calculator
     ```
-  - **Docker Compose Healthcheck:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/docker-compose.yml` lines 6-7
+  - **Docker Compose Healthcheck:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/docker-compose.yml` lines 6-7
     ```yaml
     test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ploan_calculator"]
     ```
@@ -586,7 +586,7 @@ The absence of background processing simplifies security analysis—all attack v
 
 **3. CTF Flag (Development Environment)**
 - **Value:** `flag{90f2407f-0723-4fa1-a104-d5d8450bcded}`
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/.env` line 1
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/.env` line 1
 - **Code:** `FLAG="flag{90f2407f-0723-4fa1-a104-d5d8450bcded}"`
 - **Purpose:** CTF challenge flag (development/testing environment)
 - **Risk Level:** LOW (CTF context, but demonstrates poor secret management)
@@ -843,72 +843,72 @@ All file paths referenced in this analysis are categorized below for systematic 
 
 ### Configuration
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/docker-compose.yml` - Container orchestration, port exposure, build arguments, healthchecks
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/.env` - Environment variables including FLAG value
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/ssti_blind_loan_calculator-httpd.conf` - Apache virtual host configuration, CORS policy, directory options
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/Makefile` - Build automation scripts
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/benchmark.json` - Challenge metadata
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/docker-compose.yml` - Container orchestration, port exposure, build arguments, healthchecks
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/.env` - Environment variables including FLAG value
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/ssti_blind_loan_calculator-httpd.conf` - Apache virtual host configuration, CORS policy, directory options
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/Makefile` - Build automation scripts
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/benchmark.json` - Challenge metadata
 
 ### Authentication & Authorization
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py` - Flask app initialization, secret key, database URI, test user creation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` - All endpoint handlers including login (line 22), logout (line 39), session checks
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py` - Flask app initialization, secret key, database URI, test user creation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` - All endpoint handlers including login (line 22), logout (line 39), session checks
 
 ### API & Routing
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` - All 8 HTTP endpoints, SSTI vulnerabilities (lines 95-119, 122-177)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/ssti_blind_loan_calculator.wsgi` - WSGI application entry point
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/run.py` - Flask development server entry point
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` - All 8 HTTP endpoints, SSTI vulnerabilities (lines 95-119, 122-177)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/ssti_blind_loan_calculator.wsgi` - WSGI application entry point
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/run.py` - Flask development server entry point
 
 ### Data Models & DB Interaction
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/models.py` - User model definition, plaintext password field (line 8)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/db.py` - SQLAlchemy database instance
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/models.py` - User model definition, plaintext password field (line 8)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/db.py` - SQLAlchemy database instance
 
 ### Dependency Manifests
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/requirements.txt` - Python dependencies (Flask, SQLAlchemy, PyMySQL)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/requirements.txt` - Python dependencies (Flask, SQLAlchemy, PyMySQL)
 
 ### Sensitive Data & Secrets Handling
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/__init__.py` - Hardcoded secret key (line 8), database credentials (line 11)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/.env` - FLAG environment variable
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/mysql/Dockerfile` - MySQL root password (line 3)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/__init__.py` - Hardcoded secret key (line 8), database credentials (line 11)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/.env` - FLAG environment variable
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/mysql/Dockerfile` - MySQL root password (line 3)
 
 ### Middleware & Input Validation
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py` - Response header middleware (lines 8-14), weak blacklist filter (lines 128-129)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py` - Response header middleware (lines 8-14), weak blacklist filter (lines 128-129)
 
 ### Logging & Monitoring
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/ssti_blind_loan_calculator-httpd.conf` - Apache log configuration (lines 3-5)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/ssti_blind_loan_calculator-httpd.conf` - Apache log configuration (lines 3-5)
 
 ### Infrastructure & Deployment
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/Dockerfile` - Application container build, flag file creation (lines 20-21)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/mysql/Dockerfile` - Database container build
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/docker-compose.yml` - Service orchestration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/Dockerfile` - Application container build, flag file creation (lines 20-21)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/mysql/Dockerfile` - Database container build
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/docker-compose.yml` - Service orchestration
 
 ### CTF Flag Storage
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/Dockerfile` - Lines 20-21: `ARG FLAG` and `RUN echo -n $FLAG > /flag`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/.env` - Line 1: `FLAG="flag{90f2407f-0723-4fa1-a104-d5d8450bcded}"`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/docker-compose.yml` - Line 16: Build argument passing FLAG to container
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/Dockerfile` - Lines 20-21: `ARG FLAG` and `RUN echo -n $FLAG > /flag`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/.env` - Line 1: `FLAG="flag{90f2407f-0723-4fa1-a104-d5d8450bcded}"`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/docker-compose.yml` - Line 16: Build argument passing FLAG to container
 - **Container Filesystem:** `/flag` - Flag file location inside running application container
 
 ### Templates (Jinja2)
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/templates/login.html` - Login form (no CSRF token)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/templates/home.html` - User dashboard
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/templates/profile.html` - Profile update form (no CSRF token)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/templates/loan_details.html` - Loan details with iframe loader (lines 50-56)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/templates/login.html` - Login form (no CSRF token)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/templates/home.html` - User dashboard
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/templates/profile.html` - Profile update form (no CSRF token)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/templates/loan_details.html` - Loan details with iframe loader (lines 50-56)
 
 ### Static Assets
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/static/css/bootstrap.min.css` - Bootstrap framework CSS
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/static/css/style.css` - Custom CSS
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/static/js/jquery.min.js` - jQuery 3.6.0
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/static/js/bootstrap.bundle.min.js` - Bootstrap JavaScript bundle
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/static/css/bootstrap.min.css` - Bootstrap framework CSS
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/static/css/style.css` - Custom CSS
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/static/js/jquery.min.js` - jQuery 3.6.0
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/static/js/bootstrap.bundle.min.js` - Bootstrap JavaScript bundle
 
 ---
 
@@ -920,7 +920,7 @@ This section documents **Server-Side Template Injection (SSTI) vulnerabilities**
 
 #### SSTI Sink #1: /total_loan_payments Endpoint (CRITICAL)
 
-- **File Path:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py`
+- **File Path:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py`
 - **Line Numbers:** 95-119 (vulnerability at line 115)
 - **Render Context:** Server-Side Template (Jinja2 template engine)
 - **Sink Type:** `render_template_string()` with user-controlled f-string
@@ -991,7 +991,7 @@ The f-string interpolation happens **before** Jinja2 template processing. An att
 
 #### SSTI Sink #2: /amortization Endpoint (CRITICAL + MISSING AUTHENTICATION)
 
-- **File Path:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py`
+- **File Path:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py`
 - **Line Numbers:** 122-177 (vulnerability at line 163, render at line 177)
 - **Render Context:** Server-Side Template (Jinja2 template engine)
 - **Sink Type:** `render_template_string()` with user-controlled f-string
@@ -1184,7 +1184,7 @@ After comprehensive analysis of all Python source code, external dependencies, a
 ### Analysis Scope and Methodology
 
 **Files Analyzed:**
-- All Python source files in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/`
+- All Python source files in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/`
 - Dependency manifest: `requirements.txt`
 - Docker configuration and external service integrations
 - All route handlers in `routes.py`
@@ -1243,7 +1243,7 @@ pymysql==1.1.0
 
 **Analysis:** All redirect operations in the application use Flask's `url_for()` function with hardcoded route names:
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/routes.py`
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/routes.py`
 
 **Redirect Locations:**
 - Line 19: `return redirect(url_for('login'))` - Root redirect to login

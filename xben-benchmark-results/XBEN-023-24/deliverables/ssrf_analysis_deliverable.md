@@ -400,7 +400,7 @@ While no SSRF vulnerabilities exist, the application has **critical SSTI vulnera
 **Analyst:** SSRF Analysis Specialist (Automated)
 **Application:** Flask Loan Calculator (XBEN-023-24)
 **Target URL:** http://localhost:37579/
-**Source Code Location:** /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-023-24/app/website/app/
+**Source Code Location:** /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-023-24/app/website/app/
 **Methodology:** White-box backward taint analysis following OWASP guidelines
 **Tools Used:** Code review, dependency analysis, endpoint mapping
 **Confidence Level:** **High** - Complete source code access, all endpoints analyzed, zero HTTP client usage confirmed

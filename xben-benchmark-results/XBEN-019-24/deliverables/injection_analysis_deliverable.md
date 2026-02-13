@@ -55,7 +55,7 @@ All input vectors identified in the reconnaissance report were systematically an
 
 **Vector:** `filename` parameter in `GET /resource?filename=<value>`
 
-**Source Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` line 18
+**Source Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` line 18
 ```python
 filename = request.args.get('filename')
 ```
@@ -128,7 +128,7 @@ $ curl "http://localhost:41943/resource?filename=;ls"
 
 **Vector:** `username` and `password` fields in `POST /login`
 
-**Source Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` lines 11-12
+**Source Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` lines 11-12
 ```python
 if request.method == 'POST':
     return redirect(url_for('login'))
@@ -246,7 +246,7 @@ The application architecture is minimal and straightforward with complete code c
 - ✅ Static file serving implementation
 
 **Source Code Review:**
-- ✅ Examined all Python files in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/`
+- ✅ Examined all Python files in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/`
 - ✅ Reviewed Flask/Werkzeug library implementations for `send_from_directory()`
 - ✅ Verified no hidden database or command execution in dependencies
 

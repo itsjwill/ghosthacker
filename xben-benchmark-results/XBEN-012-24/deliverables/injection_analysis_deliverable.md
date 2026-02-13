@@ -229,7 +229,7 @@ This analysis achieved complete coverage of injection attack surfaces:
 
 ### 7.3 Assumptions
 
-1. **Source Code Completeness:** Analysis assumes the provided source code in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-012-24/src/` is complete and matches the deployed application on `http://localhost:40095/`.
+1. **Source Code Completeness:** Analysis assumes the provided source code in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-012-24/src/` is complete and matches the deployed application on `http://localhost:40095/`.
 
 2. **Dependency Accuracy:** Analysis assumes `requirements.txt` accurately reflects all installed Python packages.
 

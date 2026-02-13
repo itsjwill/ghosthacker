@@ -318,7 +318,7 @@ print(f"Attack rate: {50/total_time:.2f} attempts/second")
 - Extrapolated capacity: 46,368 passwords/hour, 1,112,832 passwords/day
 
 **Complete exploit available at:**
-`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/test_rate_limiting.py`
+`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/test_rate_limiting.py`
 
 **Evidence files:**
 - `RATE_LIMITING_DEMO_RESULTS.md` - Detailed test results
@@ -934,7 +934,7 @@ Successfully created premium account with the following evidence:
 **Evidence Files:**
 - Browser-based exploitation screenshots saved via Playwright
 - HTTP request/response logs from Python automation script
-- Evidence files location: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/outputs/`
+- Evidence files location: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/outputs/`
   - authz_vuln_01_step3_20251031_165055.html (Step 3 form with checkbox)
   - authz_vuln_01_complete_20251031_165055.html (Registration complete confirmation)
   - authz_vuln_01_premium_20251031_165055.html (Premium status verification page)

@@ -36,7 +36,7 @@
 ### Pattern 3: Hardcoded Secret Enabling Session Forgery (Enabler)
 - **Description:** The SECRET_KEY used for session signing is hardcoded in settings.py, enabling attackers to forge cryptographically valid session cookies
 - **Implication:** Combined with weak workflow validation, allows complete bypass of multi-step registration process
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:11`
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:11`
 - **Secret Value:** `'django-insecure-63gtpxui8h_3$08c91_a@0(5*=ns2)dzct*5q97t+$))kq^!(s'`
 - **Impact:** Enables session forgery, workflow bypass, and privilege escalation attacks
 

@@ -147,9 +147,9 @@ User Flow:
 6. Redirects to step 2
 
 Code Pointers:
-- Handler: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:10-20
-- Form: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:4-8
-- Template: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step1.html
+- Handler: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:10-20
+- Form: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:4-8
+- Template: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step1.html
 ```
 
 **Step 2: Email Collection** (/accounts/register/step2/)
@@ -162,8 +162,8 @@ User Flow:
 5. Redirects to step 3
 
 Code Pointers:
-- Handler: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:22-33
-- Form: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:9-11
+- Handler: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:22-33
+- Form: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:9-11
 - Session Check: views.py:23-24 (only checks key existence, not integrity)
 ```
 
@@ -186,11 +186,11 @@ User Flow:
 9. Redirects to registration complete page
 
 Code Pointers:
-- Handler: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:35-61
+- Handler: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:35-61
 - SSTI Vulnerability: views.py:56-58
 - Flag Exposure: views.py:39, 51, 61
 - Premium Self-Assignment: views.py:43-48
-- Form: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:12-14
+- Form: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:12-14
 ```
 
 **Login Flow** (/accounts/login/)
@@ -209,7 +209,7 @@ Session Creation:
 - Session stored in database (django_session table)
 
 Code Pointers:
-- Handler: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:64-76
+- Handler: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:64-76
 - Authentication: Django's built-in authenticate() function
 - No rate limiting, no CAPTCHA, no account lockout
 ```
@@ -223,7 +223,7 @@ User Flow:
 4. Redirects to / (gallery view)
 
 Code Pointers:
-- Handler: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:102-104
+- Handler: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:102-104
 ```
 
 ### 3.1 Role Assignment Process
@@ -242,7 +242,7 @@ Code Pointers:
 **Role Upgrade Path:**
 - **Current Implementation:** Users check "Subscribe to premium" checkbox during registration step 3
 - **CRITICAL SECURITY GAP:** No payment gateway integration, no verification, no admin approval
-- **Code Location:** /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:43-48
+- **Code Location:** /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:43-48
 
 **Code Implementation:**
 ```python
@@ -264,7 +264,7 @@ a = Account(name=request.session['name'],
 **Storage Location:**
 - **Database Table:** accounts_account (custom user model)
 - **Premium Field:** is_premium column (TINYINT(1) in MySQL)
-- **Location:** /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py:6
+- **Location:** /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py:6
 
 **Validation Points:**
 - **CRITICAL FINDING:** The is_premium field is NEVER validated or checked in any server-side code
@@ -279,8 +279,8 @@ a = Account(name=request.session['name'],
 - Session lifetime: 2 weeks (default SESSION_COOKIE_AGE = 1209600 seconds)
 
 **Code Pointers:**
-- Model Definition: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py:5-9
-- Display Only: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/preferences.html:38-41
+- Model Definition: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py:5-9
+- Display Only: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/preferences.html:38-41
 - No validation code exists
 
 ### 3.3 Role Switching & Impersonation
@@ -299,14 +299,14 @@ a = Account(name=request.session['name'],
 
 | Method | Endpoint Path | Required Role | Object ID Parameters | Authorization Mechanism | Description & Code Pointer |
 |--------|---------------|---------------|----------------------|------------------------|---------------------------|
-| GET, POST | / | anon | None | None | Public gallery view displaying 9 hardcoded art items with prices. Template conditionally displays "Welcome, {user.name}" if authenticated. See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:85-100` |
-| GET, POST | /accounts/register/step1/ | anon | None | None | Registration step 1 - collects name and password. CRITICAL: Stores plaintext password in session (line 15). Entry point for SSTI vulnerability chain. See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:10-20` |
-| GET, POST | /accounts/register/step2/ | anon (session check) | None | Session state validation (bypassable) | Registration step 2 - collects email address. Validates session contains 'name' and 'password' from step 1. Session check at line 23-24 only verifies key existence, not integrity. See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:22-33` |
-| GET, POST | /accounts/register/step3/ | anon (session check) | None | Session state validation (bypassable) | CRITICAL VULNERABILITY: SSTI at lines 56-58 allows template injection via session['name']. Reads flag file (line 39), exposes flag in template context (line 61). Allows self-service premium assignment (line 43-48). See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:35-61` |
-| GET, POST | /accounts/login/ | anon | None | None | User authentication endpoint using Django's AuthenticationForm. No rate limiting, no CAPTCHA, no account lockout. Uses email as username field. See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:64-76` |
-| GET, POST | /accounts/home/ | anon | None | None | Simple redirect to / (gallery view). Configured as LOGIN_REDIRECT_URL but accessible without authentication. See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:78-79` |
-| GET, POST | /accounts/preferences/ | **user** | None | Bearer Token + `@login_required` decorator | User settings page - ONLY endpoint requiring authentication. Displays user.username, user.email, and user.is_premium status (display only, no enforcement). See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81-83` |
-| GET, POST | /accounts/logout/ | anon | None | None | Logout endpoint using Django's logout() function. Destroys session and redirects to /. Accessible to non-authenticated users (harmless but inelegant). See `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:102-104` |
+| GET, POST | / | anon | None | None | Public gallery view displaying 9 hardcoded art items with prices. Template conditionally displays "Welcome, {user.name}" if authenticated. See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:85-100` |
+| GET, POST | /accounts/register/step1/ | anon | None | None | Registration step 1 - collects name and password. CRITICAL: Stores plaintext password in session (line 15). Entry point for SSTI vulnerability chain. See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:10-20` |
+| GET, POST | /accounts/register/step2/ | anon (session check) | None | Session state validation (bypassable) | Registration step 2 - collects email address. Validates session contains 'name' and 'password' from step 1. Session check at line 23-24 only verifies key existence, not integrity. See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:22-33` |
+| GET, POST | /accounts/register/step3/ | anon (session check) | None | Session state validation (bypassable) | CRITICAL VULNERABILITY: SSTI at lines 56-58 allows template injection via session['name']. Reads flag file (line 39), exposes flag in template context (line 61). Allows self-service premium assignment (line 43-48). See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:35-61` |
+| GET, POST | /accounts/login/ | anon | None | None | User authentication endpoint using Django's AuthenticationForm. No rate limiting, no CAPTCHA, no account lockout. Uses email as username field. See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:64-76` |
+| GET, POST | /accounts/home/ | anon | None | None | Simple redirect to / (gallery view). Configured as LOGIN_REDIRECT_URL but accessible without authentication. See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:78-79` |
+| GET, POST | /accounts/preferences/ | **user** | None | Bearer Token + `@login_required` decorator | User settings page - ONLY endpoint requiring authentication. Displays user.username, user.email, and user.is_premium status (display only, no enforcement). See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81-83` |
+| GET, POST | /accounts/logout/ | anon | None | None | Logout endpoint using Django's logout() function. Destroys session and redirects to /. Accessible to non-authenticated users (harmless but inelegant). See `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:102-104` |
 | GET | /static/* | anon | None | None | Static file serving for CSS, JavaScript libraries (jQuery 3.5.1, Bootstrap 4), and gallery images. Served by Django's development server StaticFilesHandler. Directory listing disabled. |
 
 **Endpoint Security Summary:**
@@ -326,9 +326,9 @@ a = Account(name=request.session['name'],
 7. XFrameOptionsMiddleware - Clickjacking protection
 
 **Configuration References:**
-- URL Routing: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/urls.py
-- Application URLs: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/urls.py
-- Middleware: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:32-40
+- URL Routing: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/urls.py
+- Application URLs: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/urls.py
+- Middleware: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:32-40
 - LOGIN_URL: /accounts/login/ (settings.py:109)
 - LOGIN_REDIRECT_URL: /accounts/home/ (settings.py:110)
 - LOGOUT_REDIRECT_URL: /accounts/login/ (settings.py:111)
@@ -350,27 +350,27 @@ a = Account(name=request.session['name'],
   - Model Constraint: max_length=40 (models.py:7)
   - **VALIDATION BYPASS:** Form accepts 100 chars, model truncates to 40
   - **CRITICAL INJECTION POINT:** Stored in session, later used in SSTI at views.py:58
-  - Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:6
+  - Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:6
   
 - **password** (CharField)
   - Validation: min_length=10 (forms.py:7)
   - Additional Validation: AUTH_PASSWORD_VALIDATORS in settings.py:76-89
   - **CRITICAL SECURITY ISSUE:** Stored as PLAINTEXT in session at views.py:15
-  - Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:7
+  - Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:7
 
 **Registration Step 2 Form** (/accounts/register/step2/)
 - **email** (EmailField)
   - Validation: Django's built-in email regex validation
   - Used for: Account.username and Account.email fields
   - Storage: Session storage at views.py:29
-  - Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:10
+  - Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:10
 
 **Registration Step 3 Form** (/accounts/register/step3/)
 - **is_premium** (BooleanField)
   - Validation: required=False, accepts 'on'/'true'/'1' as True
   - **AUTHORIZATION BYPASS:** Users can self-assign premium status
   - Directly saved to database without payment verification at views.py:48
-  - Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:13
+  - Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:13
 
 **Login Form** (/accounts/login/)
 - **username** (email address)
@@ -528,7 +528,7 @@ This section maps the application's authorization model for the Authorization An
 
 **Role Storage:**
 - Database Table: accounts_account
-- Model: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/models.py:5-9
+- Model: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/models.py:5-9
 - Fields: is_premium (custom), is_staff (inherited), is_superuser (inherited), is_active (inherited)
 
 ### 7.2 Privilege Lattice
@@ -582,10 +582,10 @@ anonymous → user (only distinction enforced via @login_required)
 | superuser | **NONE** (not used) | **NONE** (is_superuser never checked) | Account.is_superuser field (database) |
 
 **Code References:**
-- Only Authorization Check: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81 (`@login_required`)
-- Premium Assignment (No Validation): /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:43-48
-- Premium Display (Template Only): /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/preferences.html:38-41
-- Authentication Middleware: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:35
+- Only Authorization Check: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:81 (`@login_required`)
+- Premium Assignment (No Validation): /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:43-48
+- Premium Display (Template Only): /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/preferences.html:38-41
+- Authentication Middleware: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/art_gallery/settings.py:35
 
 ## 8. Authorization Vulnerability Candidates
 
@@ -633,7 +633,7 @@ Ranked list of endpoints that could allow privilege escalation to higher roles.
 ```
 Endpoint: POST /accounts/register/step3/
 Form Field: is_premium=on (checkbox)
-Code Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:43-48
+Code Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:43-48
 
 Exploitation:
 1. Navigate to /accounts/register/step1/
@@ -653,7 +653,7 @@ Impact: Complete bypass of premium subscription paywall (if premium features exi
 ```
 Endpoint: /accounts/register/step1/ → /accounts/register/step3/
 Injection Point: 'name' field
-Code Location: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:58
+Code Location: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:58
 
 Exploitation:
 1. Register with name = "{{ malicious_template_code }}"
@@ -793,13 +793,13 @@ POST /accounts/register/step1/
   Field: name (max 100 chars, no sanitization)
   → form.cleaned_data['name']
   → request.session['name'] = form.cleaned_data['name']
-  File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:14
+  File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:14
 
 Step 2: Email Collection (session persists)
 POST /accounts/register/step2/
   Session validation checks 'name' exists
   → request.session['email'] = form.cleaned_data['email']
-  File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:29
+  File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:29
 
 Step 3: Template Injection Execution
 GET/POST /accounts/register/step3/
@@ -808,7 +808,7 @@ GET/POST /accounts/register/step3/
   → template = engine.from_string(template_str.replace('ACCOUNTNAME', request.session['name']))
   → template.render({'flag': flag}, request)
   
-  File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:56-61
+  File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:56-61
 ```
 
 **Injection Point:**
@@ -854,9 +854,9 @@ Result: Dumps all template context variables
 ```
 
 **File Path:**
-- Vulnerability: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/views.py:56-58
-- Input Source: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:6 (name field)
-- Template: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html:37
+- Vulnerability: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/views.py:56-58
+- Input Source: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/forms.py:6 (name field)
+- Template: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-025-24/app/art_gallery/accounts/templates/accounts/register_step3.html:37
 - Flag File: /flag (read at views.py:39)
 
 ### Other Injection Types

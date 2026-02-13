@@ -397,11 +397,11 @@ healthcheck:
 I have analyzed **100% of the network-accessible Python code** in this application:
 
 **Files Analyzed:**
-1. ✅ `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (19 lines)
-2. ✅ `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` (7 lines)
-3. ✅ `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/run.py` (4 lines)
-4. ✅ `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/application.wsgi` (2 lines)
-5. ✅ `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt` (1 line)
+1. ✅ `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (19 lines)
+2. ✅ `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` (7 lines)
+3. ✅ `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/run.py` (4 lines)
+4. ✅ `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/application.wsgi` (2 lines)
+5. ✅ `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt` (1 line)
 
 **Total Lines of Code Analyzed:** 33 lines (complete application)
 

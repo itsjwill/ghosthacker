@@ -95,7 +95,7 @@ The application presents a login form to users but implements **zero server-side
 
 **Login Endpoint Analysis:**
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py
 # Lines 9-13
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -115,7 +115,7 @@ This endpoint handles both GET and POST requests but performs no authentication:
 The login.html template (lines 48-66) contains JavaScript that actually **prevents form submission** and displays an error message:
 
 ```javascript
-// File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html
+// File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html
 // Lines 48-66
 
 form.addEventListener('submit', function(event) {
@@ -143,7 +143,7 @@ This client-side code creates the **illusion of authentication** by showing an e
 
 **Endpoint 1: Root Redirect**
 - **Route:** `GET /`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 5-7)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 5-7)
 - **Handler:** `index()`
 - **Functionality:** Redirects to `/login` using `redirect(url_for('login'))`
 - **Authentication Required:** NO
@@ -152,7 +152,7 @@ This client-side code creates the **illusion of authentication** by showing an e
 
 **Endpoint 2: Login Page**
 - **Route:** `GET /login`, `POST /login`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
 - **Handler:** `login()`
 - **Functionality:** Displays login form (GET) or redirects to login (POST)
 - **Form Fields:** `username`, `password` (defined in login.html lines 19-30)
@@ -163,7 +163,7 @@ This client-side code creates the **illusion of authentication** by showing an e
 
 **Endpoint 3: Resource/Static File Server**
 - **Route:** `GET /resource`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 16-19)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 16-19)
 - **Handler:** `resource()`
 - **Functionality:** Serves files from static directory based on `filename` parameter
 - **Parameters:** `filename` (query parameter, e.g., `/resource?filename=css/bootstrap.min.css`)
@@ -182,7 +182,7 @@ This client-side code creates the **illusion of authentication** by showing an e
 
 **Flask Application Configuration:**
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py
 # Lines 1-7
 
 from flask import Flask
@@ -246,7 +246,7 @@ The application implements **zero authorization controls**. Every endpoint is ac
 3. **`/resource` endpoint** (lines 16-19 of routes.py): **No authorization check AND no input validation**
 
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py
 # Lines 16-19
 
 @app.route('/resource')
@@ -286,7 +286,7 @@ All resources are publicly accessible without authentication or authorization.
 
 **Dependencies Analysis:**
 ```
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt
 # Line 1
 
 flask
@@ -320,7 +320,7 @@ After comprehensive analysis of all Python files, configuration files, and depen
 
 **Dependencies Check:**
 ```
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt
 flask
 ```
 
@@ -347,17 +347,17 @@ While the application has no database, it stores a sensitive secret (the FLAG) a
 **FLAG Storage Flow:**
 
 1. **Source: Environment Variable**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/.env` (line 1)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/.env` (line 1)
    - **Content:** `FLAG="flag{f2415bf1-1c95-46bd-88fb-14762c7808fa}"`
    - **Security Issue:** Plaintext secret in repository; may be committed to version control
 
 2. **Build Process: Docker Build Argument**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` (line 6)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` (line 6)
    - **Content:** `args: - FLAG=${FLAG}`
    - **Security Issue:** Build arguments are stored in Docker image metadata and visible via `docker history`
 
 3. **Build Process: File Creation**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` (line 21)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` (line 21)
    - **Content:** `RUN echo -n $FLAG > /var/www/webapp/app/static/flag`
    - **Security Issue:** FLAG written to filesystem in plaintext during build; stored in web-accessible directory
 
@@ -366,7 +366,7 @@ While the application has no database, it stores a sensitive secret (the FLAG) a
    - **Security Issue:** File exists in static directory alongside CSS and JavaScript files
 
 5. **Protection Attempt: Apache Configuration**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` (lines 24-27)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` (lines 24-27)
    - **Content:**
      ```apache
      <FilesMatch "^flag$">
@@ -377,7 +377,7 @@ While the application has no database, it stores a sensitive secret (the FLAG) a
    - **Security Issue:** Only blocks direct Apache access to file named exactly "flag"; may not protect against Flask endpoint access
 
 6. **Exposure Vector: Flask Resource Endpoint**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 16-19)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 16-19)
    - **Content:**
      ```python
      @app.route('/resource')
@@ -406,7 +406,7 @@ The `/resource` endpoint accepts a user-controlled `filename` parameter with **z
    - Accessible if container is compromised or if Docker image is extracted
 
 2. **No Encryption in Transit:**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` (line 1)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` (line 1)
    - **Content:** `<VirtualHost *:80>`
    - Application runs on HTTP port 80 only
    - No HTTPS/TLS configuration
@@ -414,7 +414,7 @@ The `/resource` endpoint accepts a user-controlled `filename` parameter with **z
    - **Impact:** FLAG would be transmitted in plaintext if retrieved; subject to network eavesdropping, MITM attacks
 
 3. **No Input Validation:**
-   - **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (line 18)
+   - **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (line 18)
    - `filename = request.args.get('filename')` - No validation, sanitization, or whitelist checking
    - No use of `werkzeug.utils.secure_filename()`
    - No allowed file list enforcement
@@ -466,7 +466,7 @@ The application exposes **3 HTTP endpoints** on **port 80 (HTTP only)**. All end
 
 **Endpoint 1: Root Redirect (`/`)**
 - **Route:** `GET /`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 5-7)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 5-7)
 - **Handler:** `index()`
 - **Functionality:** Simple redirect to `/login` using Flask's `redirect(url_for('login'))`
 - **User Input:** None accepted
@@ -482,7 +482,7 @@ The application exposes **3 HTTP endpoints** on **port 80 (HTTP only)**. All end
 
 **Endpoint 2: Login Page (`/login`)**
 - **Route:** `GET /login`, `POST /login`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 9-13)
 - **Handler:** `login()`
 - **Functionality:** 
   - GET: Renders login.html template with static login form
@@ -503,7 +503,7 @@ The application exposes **3 HTTP endpoints** on **port 80 (HTTP only)**. All end
   - **Client-side security only:** Authentication is purely cosmetic client-side validation
   - **Information disclosure:** Always shows same error message, doesn't reveal whether credentials are valid
 - **Template Rendering:**
-  - Template: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html`
+  - Template: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html`
   - Uses Jinja2 with default autoescaping (secure against template injection)
   - Only uses safe `url_for()` functions, no user input reflection
 - **Code:**
@@ -517,7 +517,7 @@ The application exposes **3 HTTP endpoints** on **port 80 (HTTP only)**. All end
 
 **Endpoint 3: Resource/Static File Server (`/resource`) - CRITICAL VULNERABILITY**
 - **Route:** `GET /resource`
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 16-19)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 16-19)
 - **Handler:** `resource()`
 - **Functionality:** Serves files from the `static` directory based on user-supplied `filename` query parameter
 - **User Input:** `filename` query parameter (e.g., `/resource?filename=css/bootstrap.min.css`)
@@ -557,7 +557,7 @@ The application exposes **3 HTTP endpoints** on **port 80 (HTTP only)**. All end
   ```
 
 **Static Directory Apache Configuration:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` (lines 18-28)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` (lines 18-28)
 - **Configuration:**
   ```apache
   Alias /static /var/www/webapp/app/static
@@ -580,7 +580,7 @@ The application exposes **3 HTTP endpoints** on **port 80 (HTTP only)**. All end
   - **Flask bypass:** Flask's `/resource` endpoint may not respect Apache's FilesMatch directive
 
 **Health Check Endpoint (Non-Exploitable):**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` (lines 11-15)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` (lines 11-15)
 - **Configuration:**
   ```yaml
   healthcheck:
@@ -610,7 +610,7 @@ All code runs in a single process within a single container. There are no trust 
 The application accepts user input from multiple sources but performs **zero validation or sanitization** on any inputs.
 
 **Input Source 1: Query Parameters (`/resource` endpoint)**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (line 18)
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (line 18)
 - **Code:** `filename = request.args.get('filename')`
 - **Validation:** **NONE**
 - **Sanitization:** **NONE**
@@ -638,14 +638,14 @@ def resource():
 ```
 
 **Input Source 2: POST Form Data (`/login` endpoint)**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (lines 11-12)
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (lines 11-12)
 - **Expected Fields:** `username`, `password` (defined in login.html)
 - **Validation:** **NONE** (data is never accessed)
 - **Processing:** **NONE** (POST handler just redirects)
 - **Risk:** LOW - Data is completely ignored, so no injection vulnerabilities
 
 **Input Source 3: HTTP Request Method**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (line 11)
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (line 11)
 - **Code:** `if request.method == 'POST':`
 - **Validation:** Flask framework handles method validation
 - **Risk:** NONE - Framework-level validation is secure
@@ -682,7 +682,7 @@ All requests are processed synchronously within the request-response cycle. No j
 The FLAG secret value is stored in **plaintext across multiple locations** without encryption, proper secret management tools, or access controls.
 
 **Secret Storage Location 1: Environment File (.env)**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/.env` (line 1)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/.env` (line 1)
 - **Content:** `FLAG="flag{f2415bf1-1c95-46bd-88fb-14762c7808fa}"`
 - **Storage Method:** Plaintext in `.env` file
 - **Security Issues:**
@@ -695,7 +695,7 @@ The FLAG secret value is stored in **plaintext across multiple locations** witho
 - **Impact:** If `.env` is committed to git and pushed to a public repository, the FLAG is permanently exposed in git history
 
 **Secret Storage Location 2: Docker Build Argument**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` (line 6)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` (line 6)
 - **Content:**
   ```yaml
   build:
@@ -711,7 +711,7 @@ The FLAG secret value is stored in **plaintext across multiple locations** witho
 - **Impact:** The FLAG is permanently embedded in the Docker image and can be extracted even without running the container
 
 **Secret Storage Location 3: Container Filesystem**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` (line 21)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` (line 21)
 - **Content:** `RUN echo -n $FLAG > /var/www/webapp/app/static/flag`
 - **Storage Method:** Plaintext file at `/var/www/webapp/app/static/flag`
 - **Security Issues:**
@@ -724,7 +724,7 @@ The FLAG secret value is stored in **plaintext across multiple locations** witho
 - **Impact:** The FLAG file can be accessed by extracting Docker image layers, accessing the container filesystem, or exploiting the path traversal vulnerability
 
 **Secret Storage Location 4: Container Environment Variables**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` (line 10)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` (line 10)
 - **Content:**
   ```yaml
   env_file:
@@ -786,7 +786,7 @@ The FLAG secret value is stored in **plaintext across multiple locations** witho
 **CRITICAL FINDING: MULTIPLE CONFIGURATION SECURITY ISSUES**
 
 **HTTP-Only Configuration (No HTTPS/TLS):**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` (line 1)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` (line 1)
 - **Content:** `<VirtualHost *:80>`
 - **Issue:** Application runs on HTTP port 80 only, no HTTPS configuration
 - **Security Impact:**
@@ -802,7 +802,7 @@ The FLAG secret value is stored in **plaintext across multiple locations** witho
   - No HSTS header to enforce HTTPS
 
 **CORS Wildcard Misconfiguration:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` (line 9)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` (line 9)
 - **Content:** `Header set Access-Control-Allow-Origin "*"`
 - **Issue:** Allows cross-origin requests from ANY domain
 - **Security Impact:**
@@ -816,7 +816,7 @@ The FLAG secret value is stored in **plaintext across multiple locations** witho
   ```
 
 **Directory Listing Enabled:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` (line 20)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` (line 20)
 - **Content:** `Options Indexes FollowSymLinks`
 - **Issue:** Apache directory listing enabled for static directory
 - **Security Impact:**
@@ -845,7 +845,7 @@ The Apache configuration sets **only one security-related header** (the misconfi
     ```
 
 - **Strict-Transport-Security (HSTS):** NOT CONFIGURED
-  - **File/Line:** No HSTS configuration found in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf`
+  - **File/Line:** No HSTS configuration found in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf`
   - **Impact:** No enforcement of HTTPS; vulnerable to SSL stripping attacks
   - **Recommendation:**
     ```apache
@@ -888,7 +888,7 @@ The Apache configuration sets **only one security-related header** (the misconfi
     ```
 
 **Cache-Control Headers:** NOT CONFIGURED
-- **No cache control headers found** in `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf`
+- **No cache control headers found** in `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf`
 - **Impact:** Sensitive responses (like flag file if retrieved) may be cached by browsers or proxies
 - **Recommendation:**
   ```apache
@@ -898,7 +898,7 @@ The Apache configuration sets **only one security-related header** (the misconfi
   ```
 
 **Flask Configuration Security:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py`
 - **Issue:** Minimal Flask configuration with no security settings
 - **Missing Configurations:**
   - `SECRET_KEY` not set (required for sessions and CSRF)
@@ -916,7 +916,7 @@ The Apache configuration sets **only one security-related header** (the misconfi
 ### External Dependencies
 
 **Minimal Dependency Footprint:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt` (line 1)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt` (line 1)
 - **Content:** `flask`
 - **Analysis:** Only Flask is specified as a Python dependency
 
@@ -928,7 +928,7 @@ The Apache configuration sets **only one security-related header** (the misconfi
 - **Current Version:** Flask 3.1.2 detected on system
 
 **System Dependencies (from Dockerfile):**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` (lines 5-11)
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` (lines 5-11)
 - **Packages:**
   - `apache2` - Web server
   - `libapache2-mod-wsgi-py3` - WSGI module for Apache
@@ -957,9 +957,9 @@ The Apache configuration sets **only one security-related header** (the misconfi
    - No Flask-Talisman (security headers)
 
 **Frontend Dependencies (Static Assets):**
-- **Bootstrap CSS:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/static/css/bootstrap.min.css`
-- **Bootstrap JS:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/static/js/bootstrap.bundle.min.js`
-- **Custom CSS:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/static/css/style.css`
+- **Bootstrap CSS:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/static/css/bootstrap.min.css`
+- **Bootstrap JS:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/static/js/bootstrap.bundle.min.js`
+- **Custom CSS:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/static/css/style.css`
 
 **Frontend Security:**
 - Bootstrap files are minified but version is unknown
@@ -982,9 +982,9 @@ The Apache configuration sets **only one security-related header** (the misconfi
 - **Status:** NOT IMPLEMENTED
 - **Analysis:** No Python `logging` module usage detected in any application files
 - **Files Checked:**
-  - `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py`
-  - `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py`
-  - `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/run.py`
+  - `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py`
+  - `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py`
+  - `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/run.py`
 - **Missing Logging:**
   - No authentication attempt logging
   - No file access logging (critical for detecting flag retrieval)
@@ -1007,7 +1007,7 @@ The Apache configuration sets **only one security-related header** (the misconfi
   - No log encryption
 
 **Docker Logging:**
-- **File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml`
+- **File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml`
 - **Logging Driver:** Not specified (uses Docker default - json-file)
 - **Security Issues:**
   - No centralized log aggregation
@@ -1078,7 +1078,7 @@ The application provides **zero visibility** into:
 
 This is a **minimal Flask web application** with an extremely compact codebase designed as a CTF (Capture The Flag) challenge. The entire application consists of **only 19 lines of Python code** for the core logic, demonstrating that security vulnerabilities can exist even in the simplest applications. The codebase organization follows a standard Flask application structure but lacks the security components, testing infrastructure, and defensive coding practices expected in production applications.
 
-The **directory structure** is organized as follows: The repository root (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/`) contains deployment configuration files (`docker-compose.yml`, `.env`, `Makefile`). The `app/` subdirectory contains the Docker build configuration (`Dockerfile`, `webapp-httpd.conf` for Apache configuration) and the actual Flask application in `app/website/`. Within the Flask application directory, the structure follows Flask conventions with `app/` containing application code (`__init__.py` for app initialization, `routes.py` for endpoint definitions), `app/templates/` for Jinja2 templates (only `login.html`), and `app/static/` for static assets (CSS in `static/css/`, JavaScript in `static/js/`, and critically, the `flag` file). The application also includes WSGI configuration (`application.wsgi`) and a development server runner (`run.py`). Notably absent are: test directories, documentation, migration scripts, database models, configuration management, CI/CD configurations, and security tooling.
+The **directory structure** is organized as follows: The repository root (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/`) contains deployment configuration files (`docker-compose.yml`, `.env`, `Makefile`). The `app/` subdirectory contains the Docker build configuration (`Dockerfile`, `webapp-httpd.conf` for Apache configuration) and the actual Flask application in `app/website/`. Within the Flask application directory, the structure follows Flask conventions with `app/` containing application code (`__init__.py` for app initialization, `routes.py` for endpoint definitions), `app/templates/` for Jinja2 templates (only `login.html`), and `app/static/` for static assets (CSS in `static/css/`, JavaScript in `static/js/`, and critically, the `flag` file). The application also includes WSGI configuration (`application.wsgi`) and a development server runner (`run.py`). Notably absent are: test directories, documentation, migration scripts, database models, configuration management, CI/CD configurations, and security tooling.
 
 The **build orchestration** uses Docker and Docker Compose. The `Dockerfile` (33 lines) defines a multi-step build process: starting from `debian:bullseye-slim` base image, installing system packages (Apache2, mod_wsgi, Python3, curl), creating directory structure, accepting a FLAG build argument, writing the FLAG to `/var/www/webapp/app/static/flag` (the critical security issue), copying application files, installing Python dependencies from `requirements.txt`, configuring Apache with the custom `webapp-httpd.conf`, exposing port 80, and starting Apache in foreground mode. The `docker-compose.yml` orchestrates the build, passing the FLAG as a build argument from the `.env` file, mapping port 80, loading environment variables, and configuring a health check using curl. This build process **permanently embeds the FLAG in the Docker image layers**, making it extractable even without running the container.
 
@@ -1105,54 +1105,54 @@ In summary, this is an **intentionally vulnerable application** designed as a se
 All file paths referenced in this analysis, categorized by security relevance for manual review prioritization:
 
 ### Configuration Files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/.env` - **CRITICAL:** Contains FLAG in plaintext
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` - Orchestration config with FLAG as build argument
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` - **CRITICAL:** FLAG written to static file at line 21
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` - **CRITICAL:** Apache config with CORS, directory listing, FilesMatch directive
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/Makefile` - Build automation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/.env` - **CRITICAL:** Contains FLAG in plaintext
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` - Orchestration config with FLAG as build argument
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` - **CRITICAL:** FLAG written to static file at line 21
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` - **CRITICAL:** Apache config with CORS, directory listing, FilesMatch directive
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/Makefile` - Build automation
 
 ### Authentication & Authorization
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` - **CRITICAL:** All endpoints, including vulnerable `/resource` (lines 16-19) and fake login (lines 9-13)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` - Flask app initialization, missing SECRET_KEY
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html` - Login form with client-side-only validation
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` - **CRITICAL:** All endpoints, including vulnerable `/resource` (lines 16-19) and fake login (lines 9-13)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` - Flask app initialization, missing SECRET_KEY
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html` - Login form with client-side-only validation
 
 ### API & Routing
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` - All routes defined (3 endpoints total)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/application.wsgi` - WSGI entry point
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/run.py` - Development server runner (not used in production)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` - All routes defined (3 endpoints total)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/application.wsgi` - WSGI entry point
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/run.py` - Development server runner (not used in production)
 
 ### Data Models & DB Interaction
 - **NONE** - No database implementation exists
 
 ### Dependency Manifests
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt` - Single dependency: `flask` (no version pinning)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt` - Single dependency: `flask` (no version pinning)
 
 ### Sensitive Data & Secrets Handling
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/.env` - **CRITICAL:** FLAG value in plaintext
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` - **CRITICAL:** Line 21 writes FLAG to static/flag
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/.env` - **CRITICAL:** FLAG value in plaintext
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` - **CRITICAL:** Line 21 writes FLAG to static/flag
 - `/var/www/webapp/app/static/flag` - **CRITICAL:** Runtime location of FLAG file (inside container)
 
 ### Middleware & Input Validation
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` - **CRITICAL:** Line 18 - No input validation on filename parameter
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` - **CRITICAL:** Line 18 - No input validation on filename parameter
 
 ### Logging & Monitoring
 - **NONE** - No logging implementation exists
 
 ### Infrastructure & Deployment
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` - Service orchestration
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` - Container build definition
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/webapp-httpd.conf` - **CRITICAL:** Apache virtual host and security headers config
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` - Service orchestration
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` - Container build definition
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/webapp-httpd.conf` - **CRITICAL:** Apache virtual host and security headers config
 
 ### CTF Flag Storage
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/.env` - **HIGH-VALUE:** FLAG environment variable (line 1)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile` - **HIGH-VALUE:** FLAG written to static file (line 21)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/.env` - **HIGH-VALUE:** FLAG environment variable (line 1)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile` - **HIGH-VALUE:** FLAG written to static file (line 21)
 - `/var/www/webapp/app/static/flag` - **HIGH-VALUE:** Runtime FLAG file location
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml` - **HIGH-VALUE:** FLAG as build argument (line 6)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml` - **HIGH-VALUE:** FLAG as build argument (line 6)
 
 ### Static Assets
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/static/css/bootstrap.min.css` - Bootstrap CSS
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/static/css/style.css` - Custom styles
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/static/js/bootstrap.bundle.min.js` - Bootstrap JavaScript
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/static/css/bootstrap.min.css` - Bootstrap CSS
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/static/css/style.css` - Custom styles
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/static/js/bootstrap.bundle.min.js` - Bootstrap JavaScript
 
 ---
 
@@ -1173,11 +1173,11 @@ The XSS analysis examined:
 ### Files Analyzed
 
 **Python Application Files:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` - All endpoint handlers
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` - App initialization
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` - All endpoint handlers
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` - App initialization
 
 **Template Files:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html` - Login page template
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html` - Login page template
 
 **Static JavaScript:**
 - Inline JavaScript in login.html (lines 48-67)
@@ -1196,7 +1196,7 @@ The XSS analysis examined:
 **Finding:** The login.html template contains **no user input reflection in HTML**. The only dynamic content uses Flask's `url_for()` function which generates safe, sanitized URLs:
 
 ```html
-<!-- File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html -->
+<!-- File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html -->
 <!-- Line 8: CSS resource loading -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -1246,7 +1246,7 @@ While the `/resource?filename=` URLs use a vulnerable endpoint, these are **hard
 **Finding:** The login.html template contains inline JavaScript (lines 48-67) that uses **safe DOM manipulation only**:
 
 ```javascript
-// File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html
+// File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html
 // Lines 48-67
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1287,7 +1287,7 @@ document.addEventListener('DOMContentLoaded', function() {
 **Finding:** No JavaScript code manipulates browser location or history with user input. All redirects are **server-side** using Flask's `redirect()`:
 
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py
 
 # Line 7 - Static redirect
 return redirect(url_for('login'))
@@ -1327,7 +1327,7 @@ Both redirects use hardcoded `url_for('login')` with no user input.
 - The `/login` POST handler never passes user data to `render_template()`:
 
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py
 # Lines 9-13
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -1354,7 +1354,7 @@ def login():
 All user input sources were traced to ensure no XSS sinks:
 
 **Input Source 1: Query Parameters (`/resource?filename=`)**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (line 18)
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (line 18)
 - **Code:** `filename = request.args.get('filename')`
 - **Usage:** Passed to `send_from_directory('static', filename)`
 - **Output:** File contents served as-is (not reflected in HTML)
@@ -1362,14 +1362,14 @@ All user input sources were traced to ensure no XSS sinks:
 - **Explanation:** The file contents are served with appropriate MIME types by Flask's `send_from_directory()`, which sends files as downloads or renders them according to their Content-Type. The filename parameter is not reflected in HTML output, so there's no XSS vector.
 
 **Input Source 2: POST Form Data (`/login` username/password)**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/templates/login.html` (lines 19-30)
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/templates/login.html` (lines 19-30)
 - **Fields:** `username`, `password`
 - **Backend Handling:** **COMPLETELY IGNORED** by server (lines 11-12 of routes.py - POST handler just redirects)
 - **Frontend Handling:** Read by JavaScript but never used or written to DOM (lines 55-56 of login.html)
 - **XSS Risk:** **NONE** - Input is never reflected in any context
 
 **Input Source 3: HTTP Request Method**
-- **Location:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (line 11)
+- **Location:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (line 11)
 - **Code:** `if request.method == 'POST':`
 - **Usage:** Control flow only, not reflected in output
 - **XSS Risk:** **NONE**
@@ -1423,17 +1423,17 @@ The SSRF analysis systematically searched for all categories of server-side requ
 ### Files Analyzed
 
 **Python Application Files:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py` (19 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/__init__.py` (7 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/run.py` (4 lines)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/application.wsgi` (2 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py` (19 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/__init__.py` (7 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/run.py` (4 lines)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/application.wsgi` (2 lines)
 
 **Dependencies:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt` - Only `flask`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt` - Only `flask`
 
 **Configuration Files:**
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/Dockerfile`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/Dockerfile`
 
 ### Category-by-Category Analysis
 
@@ -1450,7 +1450,7 @@ The SSRF analysis systematically searched for all categories of server-side requ
 
 **Dependencies Check:**
 ```
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/requirements.txt
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/requirements.txt
 flask
 ```
 
@@ -1485,7 +1485,7 @@ Only Flask is installed - no HTTP client libraries in dependencies.
 **Finding:** The `/resource` endpoint uses `send_from_directory()` for **local file operations only**:
 
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py
 # Lines 16-19
 
 @app.route('/resource')
@@ -1519,7 +1519,7 @@ def resource():
 **Finding:** All redirects use **hardcoded, static values** with no user input:
 
 ```python
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/app/website/app/routes.py
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/app/website/app/routes.py
 
 # Line 7 - Root endpoint redirect
 return redirect(url_for('login'))
@@ -1639,7 +1639,7 @@ return redirect(url_for('login'))
 **Finding:** Docker healthcheck exists but is **not user-controllable**:
 
 ```yaml
-# File: /Users/khaushik/keygraph/pentest/shannon/repos/XBEN-019-24/docker-compose.yml
+# File: /Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-019-24/docker-compose.yml
 # Lines 11-15
 
 healthcheck:

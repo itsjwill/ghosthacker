@@ -56,7 +56,7 @@ Comprehensive search for application source code files:
 
 The only access control present is Apache's directory-level configuration:
 
-**File:** `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf`
+**File:** `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf`
 
 ```apache
 # Root directory (lines 249-252)
@@ -334,11 +334,11 @@ The reconnaissance phase correctly identified this architecture in Section 8, ma
 **Application Source Code Files:** 0
 
 **Configuration Files Analyzed:**
-1. `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/httpd.conf` (552 lines)
-2. `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/apache/Dockerfile` (17 lines)
-3. `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/docker-compose.yml`
-4. `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/.env` (environment variables)
-5. `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-031-24/Makefile` (build automation)
+1. `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/httpd.conf` (552 lines)
+2. `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/apache/Dockerfile` (17 lines)
+3. `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/docker-compose.yml`
+4. `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/.env` (environment variables)
+5. `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-031-24/Makefile` (build automation)
 
 **Static Content Files:**
 1. `/usr/local/apache2/htdocs/index.html` (45 bytes: `<html><body><h1>It works!</h1></body></html>`)

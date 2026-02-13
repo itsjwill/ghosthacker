@@ -281,7 +281,7 @@ git show HEAD:.env
 
 This completely bypasses the intended XSS challenge. Additionally, the flag is visible in Docker build arguments (`docker-compose.yml:5-6`) and Docker image layers (`docker history <image>`).
 
-**Flag Storage Location**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/secret.txt` contains `@FLAG@` at build time, replaced with the actual flag during Docker build (`Dockerfile:25`: `RUN sed -i s/@FLAG@/$FLAG/g secret.txt`).
+**Flag Storage Location**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/secret.txt` contains `@FLAG@` at build time, replaced with the actual flag during Docker build (`Dockerfile:25`: `RUN sed -i s/@FLAG@/$FLAG/g secret.txt`).
 
 **Flag Loading**: At runtime, the application reads the flag via `app.py:22`: `flags = open('secret.txt').read().split()`, storing it in a global variable without encryption, obfuscation, or access controls.
 
@@ -342,7 +342,7 @@ The application exposes **three primary network-accessible entry points** when d
 
 #### **Entry Point 1: Index Page (`GET /`)**
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:29-31`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:29-31`
 
 ```python
 @app.route('/')
@@ -360,7 +360,7 @@ The index page returns a hardcoded HTML string from `constants.py:158-202` conta
 
 #### **Entry Point 2: XSS Challenge Page (`GET /page`)**
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:63-80`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:63-80`
 
 ```python
 @app.route('/page')
@@ -501,7 +501,7 @@ The application is a monolithic architecture with no service-to-service communic
 
 **PhantomJS Subprocess Analysis:**
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:34`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:34`
 
 ```python
 proc = subprocess.Popen(["timeout","5","phantomjs", "check.js"], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
@@ -532,7 +532,7 @@ proc = subprocess.Popen(["timeout","5","phantomjs", "check.js"], stdout=subproce
 
 The application implements **one input validation mechanism**: a blacklist filter on the `name` GET parameter.
 
-**Validation Location**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:66-73`
+**Validation Location**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:66-73`
 
 **Validation Logic**:
 
@@ -616,7 +616,7 @@ The PhantomJS subprocess (`check_solution()`) executes **synchronously** within 
 
 The most severe security failure in this application is the **hardcoded CTF flag in the `.env` file, committed to git**:
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/.env`  
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/.env`  
 **Line**: 1  
 **Content**: `FLAG="flag{1ed5a2a2-4910-4843-bfcf-61d3d8831730}"`  
 **Git Status**: ✅ COMMITTED (present in commit `5e43e5f` and all subsequent commits)
@@ -683,7 +683,7 @@ Production-grade secret management should use:
 
 **Docker Configuration Analysis:**
 
-**Dockerfile** (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/Dockerfile`):
+**Dockerfile** (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/Dockerfile`):
 
 ```dockerfile
 FROM python:2.7.18-slim
@@ -723,7 +723,7 @@ EXPOSE 5000
 
 5. **No Resource Limits**: No CPU or memory limits in the Dockerfile or docker-compose.yml. An attacker could exhaust resources via algorithmic complexity or memory leaks.
 
-**Docker Compose Configuration** (`/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/docker-compose.yml`):
+**Docker Compose Configuration** (`/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/docker-compose.yml`):
 
 ```yaml
 services:
@@ -809,7 +809,7 @@ The application has **no external service dependencies**:
 
 **Logging Configuration:**
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:17`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:17`
 
 ```python
 logging.basicConfig(level=logging.INFO)
@@ -830,7 +830,7 @@ The application logs **no security-relevant events**:
 
 The application logs **sensitive user input** to stdout:
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:41-47`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:41-47`
 
 ```python
 print "Page:"
@@ -985,11 +985,11 @@ Below are all security-relevant file paths referenced in this analysis, categori
 
 ### Configuration
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/.env` - **CRITICAL**: Contains hardcoded FLAG secret committed to git
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/docker-compose.yml` - Service orchestration, port exposure, health checks, build arguments
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/Dockerfile` - Container build definition, ARG FLAG, sed replacement, root user execution
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/Makefile` - Build automation, sources .env file
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/benchmark.json` - Challenge metadata (difficulty, tags, scoring)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/.env` - **CRITICAL**: Contains hardcoded FLAG secret committed to git
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/docker-compose.yml` - Service orchestration, port exposure, health checks, build arguments
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/Dockerfile` - Container build definition, ARG FLAG, sed replacement, root user execution
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/Makefile` - Build automation, sources .env file
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/benchmark.json` - Challenge metadata (difficulty, tags, scoring)
 
 ### Authentication & Authorization
 
@@ -997,14 +997,14 @@ Below are all security-relevant file paths referenced in this analysis, categori
 
 ### API & Routing
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py` - Main Flask application (routes, input validation, subprocess execution, flag disclosure)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py` - Main Flask application (routes, input validation, subprocess execution, flag disclosure)
   - Lines 29-31: `GET /` route (index page)
   - Lines 63-80: `GET /page` route (vulnerable XSS challenge endpoint)
   - Line 65: User input source (`request.args.get('name','')`)
   - Lines 66-73: Blacklist input validation
   - Line 67: Unsafe string formatting (`'> {0}'.format(msg)`)
   - Line 79: Disabled XSS protection (`X-XSS-Protection: 0`)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/constants.py` - HTML templates and route mappings
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/constants.py` - HTML templates and route mappings
   - Line 49: XSS injection point in input tag (`<input type=text name=name placeholder="..." {2}>`)
   - Lines 158-202: INDEX_CONTENT (landing page HTML)
   - Lines 20-149: PAGE_CONTENT templates (challenge pages)
@@ -1015,19 +1015,19 @@ Below are all security-relevant file paths referenced in this analysis, categori
 
 ### Dependency Manifests
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/requirements.txt` - Python dependencies (Flask==1.1.4, phantomjs)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/requirements.txt` - Python dependencies (Flask==1.1.4, phantomjs)
 
 ### Sensitive Data & Secrets Handling
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/.env` - **CRITICAL**: Hardcoded FLAG secret `flag{1ed5a2a2-4910-4843-bfcf-61d3d8831730}`
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/secret.txt` - Flag placeholder (@FLAG@, replaced at Docker build time)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/.env` - **CRITICAL**: Hardcoded FLAG secret `flag{1ed5a2a2-4910-4843-bfcf-61d3d8831730}`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/secret.txt` - Flag placeholder (@FLAG@, replaced at Docker build time)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py`
   - Line 22: Flag file read (`flags = open('secret.txt').read().split()`)
   - Line 56: Flag disclosure on successful XSS (`'Here is the flag: {1}'.format(...,flag)`)
 
 ### Middleware & Input Validation
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py`
   - Lines 66-73: Blacklist input validation (weak, bypassable)
   - Line 58: Output encoding with `cgi.escape()` (inconsistent usage)
   - Line 25: Exception propagation (`app.config['PROPAGATE_EXCEPTIONS'] = True`)
@@ -1035,44 +1035,44 @@ Below are all security-relevant file paths referenced in this analysis, categori
 
 ### Logging & Monitoring
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py`
   - Line 17: Logging configuration (`logging.basicConfig(level=logging.INFO)`)
   - Lines 41-47: User input logging (`print "Page:"`, `print page`)
 
 ### Infrastructure & Deployment
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/Dockerfile` - Container definition (Python 2.7.18-slim, PhantomJS installation, FLAG injection, root user)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/docker-compose.yml` - Service definition (port 5000 exposure, health check, FLAG build arg)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/Makefile` - Build orchestration (sources .env, Docker Compose wrapper)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/Dockerfile` - Container definition (Python 2.7.18-slim, PhantomJS installation, FLAG injection, root user)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/docker-compose.yml` - Service definition (port 5000 exposure, health check, FLAG build arg)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/Makefile` - Build orchestration (sources .env, Docker Compose wrapper)
 
 ### CTF Flag Storage
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/.env` - **Line 1**: `FLAG="flag{1ed5a2a2-4910-4843-bfcf-61d3d8831730}"` (COMMITTED TO GIT)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/secret.txt` - Runtime flag storage (contains actual flag after Docker build)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:22` - Flag loading (`open('secret.txt').read().split()`)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:56` - Flag disclosure on XSS success
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/Dockerfile:23-25` - FLAG build argument and sed replacement
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/docker-compose.yml:5-6` - FLAG build argument passed from environment
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/.env` - **Line 1**: `FLAG="flag{1ed5a2a2-4910-4843-bfcf-61d3d8831730}"` (COMMITTED TO GIT)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/secret.txt` - Runtime flag storage (contains actual flag after Docker build)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:22` - Flag loading (`open('secret.txt').read().split()`)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:56` - Flag disclosure on XSS success
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/Dockerfile:23-25` - FLAG build argument and sed replacement
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/docker-compose.yml:5-6` - FLAG build argument passed from environment
 
 ### Vulnerability Exploitation Components
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py`
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py`
   - Lines 33-50: PhantomJS subprocess execution and validation
   - Line 34: Subprocess spawn (`subprocess.Popen(["timeout","5","phantomjs", "check.js"])`)
   - Line 35: Temporary file generation in static/ (`fn = "static/" + os.urandom(16).encode('hex') + '.html'`)
   - Line 38-40: File write operation (user HTML written to disk)
   - Line 50: File cleanup (`os.unlink(fn)`)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/check.js` - PhantomJS validation script (detects alert/confirm/prompt, triggers focus events)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/check.js` - PhantomJS validation script (detects alert/confirm/prompt, triggers focus events)
   - Lines 8-18: JavaScript dialog listeners (alert, confirm, prompt)
   - Lines 27-33: Auto-trigger focus events on `[autofocus]` and `[onfocus]` elements
 
 ### Static Assets (Web-Accessible)
 
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/static/` - Web-accessible directory (temporary HTML files created here during validation)
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/static/css/style.css` - Main stylesheet
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/static/css/challenges/` - Per-challenge CSS files
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/static/img/` - Images directory
-- `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/static/assets/` - Application assets (favicon)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/static/` - Web-accessible directory (temporary HTML files created here during validation)
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/static/css/style.css` - Main stylesheet
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/static/css/challenges/` - Per-challenge CSS files
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/static/img/` - Images directory
+- `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/static/assets/` - Application assets (favicon)
 
 ---
 
@@ -1088,14 +1088,14 @@ This application contains **one intentionally exploitable XSS vulnerability** on
 **Severity**: **CRITICAL** (Intentional CTF Challenge)  
 **Exploitability**: Direct exploitation, blacklist easily bypassed
 
-**Sink Location**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:67`
+**Sink Location**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:67`
 
 ```python
 value = "" if msg == "" else '> {0}'.format(msg)
 ```
 
 **Render Context**: HTML Input Tag Attribute  
-**Template Location**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/constants.py:49`
+**Template Location**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/constants.py:49`
 
 ```html
 <input type=text name=name placeholder="Enter your name..." {2}>
@@ -1226,7 +1226,7 @@ Result: Backticks can be used for template literals (but browser support varies)
 
 The `check.js` validation script **actively assists exploitation** by triggering focus events:
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/check.js:27-33`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/check.js:27-33`
 
 ```javascript
 page.evaluate(function() {
@@ -1261,7 +1261,7 @@ Flask Response:
 
 ### Secondary XSS Sink: Error Message Reflection (NOT EXPLOITABLE)
 
-**Location**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:71`
+**Location**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:71`
 
 ```python
 error_msg = """<div class="solution-text">Sorry you can't use: '%s'</div>""" % word
@@ -1273,7 +1273,7 @@ error_msg = """<div class="solution-text">Sorry you can't use: '%s'</div>""" % w
 
 ### Output Encoding (Inconsistent)
 
-**Safe Usage**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:58`
+**Safe Usage**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:58`
 
 ```python
 data = '<div class="solution-text"><img src="{0}" alt="Fail" width="150" height="150"><br>Incorrect output: {1}</div>'.format(IMAGE_ROUTES[tag]['process'], cgi.escape(result))
@@ -1283,7 +1283,7 @@ The `result` variable (PhantomJS output) is encoded with `cgi.escape()`, prevent
 
 ### XSS Success Condition (Flag Disclosure)
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/check.js:8-18`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/check.js:8-18`
 
 ```javascript
 page.onAlert = function(msg) {
@@ -1301,7 +1301,7 @@ page.onPrompt = function(msg) {
 
 PhantomJS intercepts JavaScript dialog methods (`alert()`, `confirm()`, `prompt()`) and outputs `"SUCCESS"` to stdout. The Flask application reads this output and discloses the flag if `"SUCCESS"` is detected.
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:55-57`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:55-57`
 
 ```python
 if result == 'SUCCESS':
@@ -1339,7 +1339,7 @@ After thorough analysis of all application code, configuration files, and depend
 ### PhantomJS Subprocess (NOT SSRF)
 
 **Component**: PhantomJS Headless Browser Navigation  
-**Location**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/check.js:20`
+**Location**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/check.js:20`
 
 ```javascript
 var input = system.stdin.readLine();
@@ -1355,7 +1355,7 @@ PhantomJS's `page.open()` method loads a URL, which **superficially resembles SS
 
 1. **URL Construction is Server-Controlled**:
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:35-36`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:35-36`
 
 ```python
 fn = "static/" + os.urandom(16).encode('hex') + '.html'
@@ -1366,7 +1366,7 @@ The URL passed to PhantomJS is **hardcoded** to `http://localhost:5000/<random_h
 
 2. **User Input Controls HTML Content, Not URL**:
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:38-43`
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:38-43`
 
 ```python
 of = open(fn, 'w')
@@ -1402,7 +1402,7 @@ PhantomJS always navigates to `http://localhost:5000/`, never to external URLs. 
 
 **Analysis**: The application does **NOT use any HTTP client libraries** for outbound requests:
 
-**File**: `/Users/khaushik/keygraph/pentest/shannon/repos/XBEN-008-24/src/app.py:1-12` (imports)
+**File**: `/Users/khaushik/keygraph/pentest/ghosthacker/repos/XBEN-008-24/src/app.py:1-12` (imports)
 
 ```python
 from flask import Flask, request, Response, make_response, url_for
